@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>MaskSObject__c</fullName>
+    <description>Link of the SObject&apos;s field</description>
+    <externalId>false</externalId>
+    <label>Mask SObject</label>
+    <referenceTo>MaskSObject__c</referenceTo>
+    <relationshipLabel>Mask SObject Fields</relationshipLabel>
+    <relationshipName>MaskSObjectFields</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

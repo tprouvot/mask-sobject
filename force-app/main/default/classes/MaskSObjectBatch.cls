@@ -9,6 +9,8 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 	@TestVisible
 	private String sobjectName;
 	private static List<MaskSObjectField__c> fields;
+	private static List<String> queryFields;
+
 	private String whereClause;
 
 	/**
@@ -34,11 +36,6 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 	 */
 	public Database.QueryLocator start(Database.BatchableContext BC){
 		//TODO Use batch size
-		fields = [SELECT APIName__c, Action__c FROM MaskSObjectField__c WHERE MaskSObject__r.APIName__c =: this.sobjectName];
-		List<String> queryFields = new List<String>();
-		for(MaskSObjectField__c field : fields){
-			queryFields.add(field.APIName__c);
-		}
 
 		String query = 'SELECT Id, ' + String.join(queryFields, ',') + ' FROM ' + String.escapeSingleQuotes(this.sobjectName);
 		if(String.isNotBlank(whereClause)){
@@ -92,7 +89,8 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 		}
 
 		//get the next sequences to avoid issue with missing numbers
-		List<MaskSObject__c> settings = [SELECT APIName__c, Sequence__c, WhereClause__c FROM MaskSObject__c
+		List<MaskSObject__c> settings = [SELECT APIName__c, Sequence__c, WhereClause__c
+			,(SELECT APIName__c, Action__c FROM MaskSObjectFields__r) FROM MaskSObject__c
 			WHERE Sequence__c >:sequence ORDER BY Sequence__c];
 
 		//store the lastIndex to end the process
@@ -105,5 +103,12 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 		this.sequence = Integer.valueOf(setting.Sequence__c);
 		this.sobjectName = setting.APIName__c;
 		this.whereClause = setting.WhereClause__c;
+
+		//store the fields to mask for the query
+		fields = setting.MaskSObjectFields__r;
+		queryFields = new List<String>();
+		for(MaskSObjectField__c field : setting.MaskSObjectFields__r){
+			queryFields.add(field.APIName__c);
+		}
 	}
 }

@@ -26,35 +26,37 @@ public with sharing class MaskSObjectUtils {
 
 	public static void maskField(Map<String, Schema.DisplayType> fieldType, MaskSObjectField__c field, SObject sobj){
 		String val = (String)sobj.get(field.APIName__c);
-		String retVal;
+		if(val != null){
+			String retVal;
 
-		if(MaskSObjectConstants.ACTION_ERASE.equals(field.Action__c)){
-			retVal = null;
-		} else {
-			String prefix = '';
-			String suffix = '';
+			if(MaskSObjectConstants.ACTION_ERASE.equals(field.Action__c)){
+				retVal = null;
+			} else {
+				String prefix = '';
+				String suffix = '';
 
-			switch on fieldType.get(field.APIName__c) {
-				when EMAIL{
-					//keep the email suffix to create a valid email address
-					suffix = '@' + val.substringAfter('@');
-					val = val.substringBefore('@');
+				switch on fieldType.get(field.APIName__c) {
+					when EMAIL{
+						//keep the email suffix to create a valid email address
+						suffix = '@' + val.substringAfter('@');
+						val = val.substringBefore('@');
+					}
+					when PHONE{
+						//keep the prefix to prevent VR errors
+						Integer phonePrefixIndex = 2;
+						prefix = val.left(phonePrefixIndex);
+						val = val.substringAfter(prefix);
+					}
 				}
-				when PHONE{
-					//keep the prefix to prevent VR errors
-					Integer phonePrefixIndex = 2;
-					prefix = val.left(phonePrefixIndex);
-					val = val.substringAfter(prefix);
-				}
-			}
 
-			if(MaskSObjectConstants.ACTION_RANDOMIZE.equals(field.Action__c)){
-				val = getRandomString(val.length());
-			} else if(MaskSObjectConstants.ACTION_OBFUSCATE.equals(field.Action__c)){
-				val = obfuscate(val);
+				if(MaskSObjectConstants.ACTION_RANDOMIZE.equals(field.Action__c)){
+					val = getRandomString(val.length());
+				} else if(MaskSObjectConstants.ACTION_OBFUSCATE.equals(field.Action__c)){
+					val = obfuscate(val);
+				}
+				retVal = prefix + val + suffix;
 			}
-			retVal = prefix + val + suffix;
+			sobj.put(field.APIName__c, retVal);
 		}
-		sobj.put(field.APIName__c, retVal);
 	}
 }

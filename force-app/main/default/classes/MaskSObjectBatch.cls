@@ -8,10 +8,11 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 
 	@TestVisible
 	private String sobjectName;
+
 	private static List<MaskSObjectField__c> fields;
 	private static List<String> queryFields;
-
 	private String whereClause;
+	Map<String, Schema.DisplayType> fieldType;
 
 	/**
 	 * @description Instanciate constructor with parameters, is called in the finish method
@@ -47,16 +48,8 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 	public void execute(Database.BatchableContext BC, List<SObject> scope){
 
 		for(SObject sobj : scope){
-			//TODO Check if field is updatable to avoid errors
 			for(MaskSObjectField__c field : fields){
-				if(MaskSObjectConstants.ACTION_ERASE.equals(field.Action__c)){
-					//TODO Handle non string fields types
-					sobj.put(field.APIName__c, '');
-				} else if(MaskSObjectConstants.ACTION_OBFUSCATE.equals(field.Action__c)){
-					//TODO Handle non string fields types
-					String val = (String)sobj.get(field.APIName__c);
-					sobj.put(field.APIName__c, val.reverse());
-				}
+				maskField(field, sobj);
 			}
 		}
 
@@ -82,7 +75,7 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 	 * @description Instanciate the parameters of the batch :the sobjectName to parse and his sequence
 	 * @param  sequence Object order of execution
 	 */
-	public void setParams(Integer sequence){
+	private void setParams(Integer sequence){
 		//if param is null it means the method was called from the scheduled job
 		if(sequence == null){
 			sequence = 0;
@@ -109,6 +102,37 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 		queryFields = new List<String>();
 		for(MaskSObjectField__c field : setting.MaskSObjectFields__r){
 			queryFields.add(field.APIName__c);
+		}
+
+		//store describe field resultto set it only on new SObject iteration
+		setFieldsTypes();
+	}
+
+	private void setFieldsTypes(){
+		Schema.DescribeSObjectResult descr = Schema.getGlobalDescribe().get(this.sobjectName).getDescribe();
+		Map<String, Schema.SObjectField> fields = descr.fields.getMap();
+
+		fieldType = new Map<String, Schema.DisplayType>();
+		for(String field : queryFields){
+			Schema.DescribeFieldResult fr = fields.get(field.toLowerCase()).getDescribe();
+			fieldType.put(field, fr.getType());
+		}
+	}
+
+	private void maskField(MaskSObjectField__c field, SObject sobj){
+		if(MaskSObjectConstants.ACTION_ERASE.equals(field.Action__c)){
+			sobj.put(field.APIName__c, null);
+		} else if(MaskSObjectConstants.ACTION_OBFUSCATE.equals(field.Action__c)){
+
+			String val = (String)sobj.get(field.APIName__c);
+			String retVal = MaskSObjectUtils.getRandomString(val.length());
+
+			switch on fieldType.get(field.APIName__c) {
+				when EMAIL{
+					retVal = retVal.substring(0, val.length()) + '@' + val.substringAfter('@');
+				}
+			}
+			sobj.put(field.APIName__c, retVal);
 		}
 	}
 }

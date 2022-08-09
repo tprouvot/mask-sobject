@@ -17,10 +17,10 @@ private class MaskSObjectBatchTest {
 
 		List<MaskSObjectField__c> fieldMask = new List<MaskSObjectField__c>{
 			new MaskSObjectField__c(MaskSObject__c = sobjMask.get(0).Id, APIName__c = 'Name', Action__c = MaskSObjectConstants.ACTION_OBFUSCATE),
-			new MaskSObjectField__c(MaskSObject__c = sobjMask.get(0).Id, APIName__c = 'Phone', Action__c = MaskSObjectConstants.ACTION_ERASE),
+			new MaskSObjectField__c(MaskSObject__c = sobjMask.get(0).Id, APIName__c = 'Phone', Action__c = MaskSObjectConstants.ACTION_OBFUSCATE),
 			new MaskSObjectField__c(MaskSObject__c = sobjMask.get(1).Id, APIName__c = 'LastName', Action__c = MaskSObjectConstants.ACTION_OBFUSCATE),
 			new MaskSObjectField__c(MaskSObject__c = sobjMask.get(1).Id, APIName__c = 'AssistantName', Action__c = MaskSObjectConstants.ACTION_ERASE),
-			new MaskSObjectField__c(MaskSObject__c = sobjMask.get(1).Id, APIName__c = 'Email', Action__c = MaskSObjectConstants.ACTION_OBFUSCATE)
+			new MaskSObjectField__c(MaskSObject__c = sobjMask.get(1).Id, APIName__c = 'Email', Action__c = MaskSObjectConstants.ACTION_RANDOMIZE)
 		};
 		insert fieldMask;
 

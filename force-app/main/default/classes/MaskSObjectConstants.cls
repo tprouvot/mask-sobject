@@ -6,4 +6,5 @@ public with sharing class MaskSObjectConstants {
 	public static final String ACTION_ERASE = 'Erase';
 	public static final String ACTION_REPLACE = 'Replace';
 	public static final String ACTION_OBFUSCATE = 'Obfuscate';
+	public static final String ACTION_RANDOMIZE = 'Randomize';
 }

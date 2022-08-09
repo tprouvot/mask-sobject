@@ -9,10 +9,10 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 	@TestVisible
 	private String sobjectName;
 
-	private static List<MaskSObjectField__c> fields;
-	private static List<String> queryFields;
+	private List<MaskSObjectField__c> fields;
+	private List<String> queryFields;
 	private String whereClause;
-	Map<String, Schema.DisplayType> fieldType;
+	private Map<String, Schema.DisplayType> fieldType;
 
 	/**
 	 * @description Instanciate constructor with parameters, is called in the finish method
@@ -38,18 +38,19 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 	public Database.QueryLocator start(Database.BatchableContext BC){
 		//TODO Use batch size
 
-		String query = 'SELECT Id, ' + String.join(queryFields, ',') + ' FROM ' + String.escapeSingleQuotes(this.sobjectName);
+		String query = 'SELECT Id, ' + String.join(this.queryFields, ',') + ' FROM ' + String.escapeSingleQuotes(this.sobjectName);
 		if(String.isNotBlank(whereClause)){
 			query += ' WHERE ' + whereClause;
 		}
+		System.debug(LoggingLevel.INFO, query);
 		return Database.getQueryLocator(query);
 	}
 
 	public void execute(Database.BatchableContext BC, List<SObject> scope){
 
 		for(SObject sobj : scope){
-			for(MaskSObjectField__c field : fields){
-				maskField(field, sobj);
+			for(MaskSObjectField__c field : this.fields){
+				MaskSObjectUtils.maskField(fieldType, field, sobj);
 			}
 		}
 
@@ -98,10 +99,10 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 		this.whereClause = setting.WhereClause__c;
 
 		//store the fields to mask for the query
-		fields = setting.MaskSObjectFields__r;
+		this.fields = setting.MaskSObjectFields__r;
 		queryFields = new List<String>();
 		for(MaskSObjectField__c field : setting.MaskSObjectFields__r){
-			queryFields.add(field.APIName__c);
+			this.queryFields.add(field.APIName__c);
 		}
 
 		//store describe field resultto set it only on new SObject iteration
@@ -113,26 +114,9 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 		Map<String, Schema.SObjectField> fields = descr.fields.getMap();
 
 		fieldType = new Map<String, Schema.DisplayType>();
-		for(String field : queryFields){
+		for(String field : this.queryFields){
 			Schema.DescribeFieldResult fr = fields.get(field.toLowerCase()).getDescribe();
 			fieldType.put(field, fr.getType());
-		}
-	}
-
-	private void maskField(MaskSObjectField__c field, SObject sobj){
-		if(MaskSObjectConstants.ACTION_ERASE.equals(field.Action__c)){
-			sobj.put(field.APIName__c, null);
-		} else if(MaskSObjectConstants.ACTION_OBFUSCATE.equals(field.Action__c)){
-
-			String val = (String)sobj.get(field.APIName__c);
-			String retVal = MaskSObjectUtils.getRandomString(val.length());
-
-			switch on fieldType.get(field.APIName__c) {
-				when EMAIL{
-					retVal = retVal.substring(0, val.length()) + '@' + val.substringAfter('@');
-				}
-			}
-			sobj.put(field.APIName__c, retVal);
 		}
 	}
 }

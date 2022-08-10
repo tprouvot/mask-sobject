@@ -3,7 +3,7 @@
     <fullName>APIName__c</fullName>
     <caseSensitive>false</caseSensitive>
     <description>API Name of the SObject to mask</description>
-    <externalId>false</externalId>
+    <externalId>true</externalId>
     <label>API Name</label>
     <length>150</length>
     <required>true</required>

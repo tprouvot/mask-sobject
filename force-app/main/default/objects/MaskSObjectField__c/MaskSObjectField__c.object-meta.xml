@@ -156,8 +156,9 @@
     <externalSharingModel>ControlledByParent</externalSharingModel>
     <label>Mask SObject Field</label>
     <nameField>
+        <displayFormat>MASK-{0000}</displayFormat>
         <label>Mask SObject Name</label>
-        <type>Text</type>
+        <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Mask SObject Fields</pluralLabel>
     <searchLayouts></searchLayouts>

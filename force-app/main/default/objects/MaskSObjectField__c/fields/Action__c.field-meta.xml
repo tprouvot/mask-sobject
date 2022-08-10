@@ -26,6 +26,11 @@
                 <default>false</default>
                 <label>Obfuscate</label>
             </value>
+            <value>
+                <fullName>Randomize</fullName>
+                <default>false</default>
+                <label>Randomize</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

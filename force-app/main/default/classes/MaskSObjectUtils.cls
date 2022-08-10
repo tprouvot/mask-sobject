@@ -6,7 +6,7 @@ public with sharing class MaskSObjectUtils {
 	 * @return  `String`
 	 */
 	private static String getRandomString(Integer len){
-		Blob blobKey = Crypto.generateAesKey(192);
+		Blob blobKey = Crypto.generateAesKey(128);
 		String key = EncodingUtil.base64encode(blobKey);
 		return key.substring(0, len > key.length() ? key.length() : len);
 	}

@@ -8,6 +8,26 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>MaskSObject__c.LastEnd__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>MaskSObject__c.LastJobId__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>MaskSObject__c.LastStart__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>MaskSObject__c.Name__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>MaskSObject__c.WhereClause__c</field>
         <readable>true</readable>
     </fieldPermissions>

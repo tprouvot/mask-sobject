@@ -36,13 +36,14 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 	 * @return    QueryLocator
 	 */
 	public Database.QueryLocator start(Database.BatchableContext BC){
+		//update start time
+		upsert new MaskSObject__c(APIName__c = this.sobjectName, LastStart__c = System.now(), LastJobId__c = BC.getJobId()) APIName__c;
 		//TODO Use batch size
 
 		String query = 'SELECT Id, ' + String.join(this.queryFields, ',') + ' FROM ' + String.escapeSingleQuotes(this.sobjectName);
 		if(String.isNotBlank(whereClause)){
 			query += ' WHERE ' + whereClause;
 		}
-		System.debug(LoggingLevel.INFO, query);
 		return Database.getQueryLocator(query);
 	}
 
@@ -66,6 +67,7 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 	 * @param  BC BatchableContext
 	 */
 	public void finish(Database.BatchableContext BC){
+		upsert new MaskSObject__c(APIName__c = this.sobjectName, LastEnd__c = System.now()) APIName__c;
 		//call the batch only if the Object list is not the last one
 		if(sequence < lastSequence){
 			Database.executeBatch(new MaskSObjectBatch(sequence, lastSequence));

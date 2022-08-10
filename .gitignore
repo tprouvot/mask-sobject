@@ -41,5 +41,6 @@ $RECYCLE.BIN/
 
 # VS Code
 .vscode/
+.husky/
 # VS Code Extensions
 .history/

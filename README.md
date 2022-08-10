@@ -1,18 +1,23 @@
-# Salesforce DX Project: Next Steps
+# Mask SObject Framework
 
-Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.
+This framework allow users to configure some data masking operations.
 
-## How Do You Plan to Deploy Your Changes?
+## How Do You Configure SObjects And Fields to Mask ?
 
-Do you want to deploy a set of changes, or create a self-contained application? Choose a [development model](https://developer.salesforce.com/tools/vscode/en/user-guide/development-models).
+The configuration is based on two objects:
 
-## Configure Your Salesforce DX Project
+- MaskSObject__c  : which define the object to mask with options such as the order sequence and the where clause
+- MaskSObjectField___c : which define the fields to mask and the option of masking (erase, randomize ...)
 
-The `sfdx-project.json` file contains useful configuration information for your project. See [Salesforce DX Project Configuration](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm) in the _Salesforce DX Developer Guide_ for details about this file.
+[![SObjedt config](https://github.com/tprouvot/mask-sobject/blob/framework-beta/screenshots/2022-08-10_09-42-09.png)](https://github.com/tprouvot/mask-sobject/blob/framework-beta/screenshots/2022-08-10_09-42-09.png)
+## Deploy to Salesforce
 
-## Read All About It
+Checkout the repo and deploy it with sfdx:
+```sh
+sfdx force:source:deploy -p force-app
+```
 
-- [Salesforce Extensions Documentation](https://developer.salesforce.com/tools/vscode/)
-- [Salesforce CLI Setup Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_intro.htm)
-- [Salesforce DX Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_intro.htm)
-- [Salesforce CLI Command Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference.htm)
+Use GitHub Salesforce Deploy Tool:
+
+![Button](https://raw.githubusercontent.com/afawcett/githubsfdeploy/master/src/main/webapp/resources/img/deploy.png)
+

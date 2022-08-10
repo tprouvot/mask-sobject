@@ -37,7 +37,7 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 	 */
 	public Database.QueryLocator start(Database.BatchableContext BC){
 		//update start time
-		upsert new MaskSObject__c(APIName__c = this.sobjectName, LastStart__c = System.now(), LastJobId__c = BC.getJobId()) APIName__c;
+		upsert new MaskSObject__c(APIName__c = this.sobjectName, LastStart__c = System.now(), LastEnd__c = null, LastJobId__c = BC.getJobId()) APIName__c;
 		//TODO Use batch size
 
 		String query = 'SELECT Id, ' + String.join(this.queryFields, ',') + ' FROM ' + String.escapeSingleQuotes(this.sobjectName);

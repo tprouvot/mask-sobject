@@ -19,5 +19,4 @@ sfdx force:source:deploy -p force-app
 
 Use GitHub Salesforce Deploy Tool:
 
-![Button(https://githubsfdeploy.herokuapp.com/?owner=tprouvot&repo=mask-sobject&ref=framework-beta)](https://raw.githubusercontent.com/afawcett/githubsfdeploy/master/src/main/webapp/resources/img/deploy.png)
-
+![Deploy to Salesforce](https://raw.githubusercontent.com/afawcett/githubsfdeploy/master/src/main/webapp/resources/img/deploy.png)](https://githubsfdeploy.herokuapp.com/?owner=tprouvot&repo=mask-sobject&ref=framework-beta)

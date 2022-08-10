@@ -13,6 +13,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>MaskSObject__c.JobItemsProcessed__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>MaskSObject__c.LastEnd__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -29,6 +34,16 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>MaskSObject__c.Name__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>MaskSObject__c.NumberOfErrors__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>MaskSObject__c.TotalJobItems__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

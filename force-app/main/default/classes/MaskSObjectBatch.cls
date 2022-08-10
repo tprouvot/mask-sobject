@@ -36,8 +36,11 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 	 * @return    QueryLocator
 	 */
 	public Database.QueryLocator start(Database.BatchableContext BC){
-		//update start time
-		upsert new MaskSObject__c(APIName__c = this.sobjectName, LastStart__c = System.now(), LastEnd__c = null, LastJobId__c = BC.getJobId()) APIName__c;
+		//update job informations
+		AsyncApexJob job = getJob(BC.getJobId());
+		upsert new MaskSObject__c(APIName__c = this.sobjectName, LastStart__c = System.now(), LastEnd__c = null,
+			LastJobId__c = job.Id, JobItemsProcessed__c = job.JobItemsProcessed, TotalJobItems__c = job.TotalJobItems,
+			NumberOfErrors__c = job.NumberOfErrors) APIName__c;
 		//TODO Use batch size
 
 		String query = 'SELECT Id, ' + String.join(this.queryFields, ',') + ' FROM ' + String.escapeSingleQuotes(this.sobjectName);
@@ -57,9 +60,11 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 
 		SObjectType sObjType = ((SObject) Type.forName(this.sobjectName).newInstance()).getSObjectType();
 		if (sObjType.getDescribe().isUpdateable()) {
-			//Database.update(scope, false);
-			update(scope);
+			Database.update(scope, false);
 		}
+		AsyncApexJob job = getJob(BC.getJobId());
+		upsert new MaskSObject__c(APIName__c = this.sobjectName, TotalJobItems__c = job.TotalJobItems,
+			JobItemsProcessed__c = job.JobItemsProcessed + 1, NumberOfErrors__c = job.NumberOfErrors) APIName__c;
 	}
 
 	/**
@@ -120,5 +125,9 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 			Schema.DescribeFieldResult fr = fields.get(field.toLowerCase()).getDescribe();
 			fieldType.put(field, fr.getType());
 		}
+	}
+
+	private AsyncApexJob getJob(Id jobId){
+		return [SELECT JobItemsProcessed, TotalJobItems, NumberOfErrors FROM AsyncApexJob WHERE Id=:jobId];
 	}
 }

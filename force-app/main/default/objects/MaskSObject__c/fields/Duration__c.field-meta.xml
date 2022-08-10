@@ -11,7 +11,7 @@
   &quot;&quot;
 )</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-    <label>Duration in hours</label>
+    <label>Duration</label>
     <required>false</required>
     <trackTrending>false</trackTrending>
     <type>Text</type>

@@ -1,14 +1,17 @@
 @isTest
-private class MaskSObjectBatchTest {
+public class MaskSObjectBatchTest {
 
-	private static String NAME = 'Test Mask Data';
+	@TestVisible private static String NAME = 'Test Mask Data';
 	private static String PHONE = '0606060606';
 	private static String LASTNAME = 'Doe';
 	private static String ASSISTANTNAME = 'Jane DOE';
 	private static String EMAIL = 'jdoe@masksobject.com';
 
-	@TestSetup
-	static void makeData(){
+	/**
+	 * @description This method creates required data to test the framework, it is static to be used in
+	 *  MaskSObjectPostCopyTest
+	 */
+	public static void createTestData(){
 		List<MaskSObject__c> sobjMask = new List<MaskSObject__c>{
 			new MaskSObject__c(Sequence__c = 1, APIName__c = 'Account'),
 			new MaskSObject__c(Sequence__c = 2, APIName__c = 'Contact', WhereClause__c = 'AssistantName != null')
@@ -30,6 +33,7 @@ private class MaskSObjectBatchTest {
 
 	@isTest
 	static void maskSobjectTest(){
+		createTestData();
 
 		Test.startTest();
 		Database.executeBatch(new MaskSObjectBatch());

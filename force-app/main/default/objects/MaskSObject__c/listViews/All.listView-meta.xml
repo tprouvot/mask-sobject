@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ListView xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>All</fullName>
+    <columns>Name__c</columns>
     <columns>Sequence__c</columns>
     <columns>Name__c</columns>
     <columns>APIName__c</columns>

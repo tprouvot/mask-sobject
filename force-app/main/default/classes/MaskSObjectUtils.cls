@@ -1,12 +1,23 @@
 public with sharing class MaskSObjectUtils {
 
 	/**
+	 * @description  Returns the list of MaskSObject__c after the sequence parameter
+	 * @param sequence
+	 * @return  `List<MaskSObject__c>`
+	 */
+	public static List<MaskSObject__c> getMaskSObjectList(Integer sequence){
+		return [SELECT APIName__c, Sequence__c, WhereClause__c, BatchSize__c
+			,(SELECT APIName__c, Action__c FROM MaskSObjectFields__r) FROM MaskSObject__c
+			WHERE Sequence__c >:sequence ORDER BY Sequence__c];
+	}
+
+	/**
 	 * @description Returns a random string based on the length char number
 	 * @param len
 	 * @return  `String`
 	 */
 	private static String getRandomString(Integer len){
-		Blob blobKey = Crypto.generateAesKey(192);
+		Blob blobKey = Crypto.generateAesKey(128);
 		String key = EncodingUtil.base64encode(blobKey);
 		return key.substring(0, len > key.length() ? key.length() : len);
 	}

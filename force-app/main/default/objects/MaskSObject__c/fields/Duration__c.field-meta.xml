@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Duration__c</fullName>
+    <description>Duration between last start and last end execution</description>
+    <externalId>false</externalId>
+    <formula>IF(
+  LastEnd__c - LastStart__c &gt; 0 ,
+  TEXT( FLOOR( LastEnd__c - LastStart__c ) ) &amp; &quot; days &quot;
+  &amp; TEXT( FLOOR( MOD( (LastEnd__c - LastStart__c ) * 24, 24 ) ) ) &amp; &quot; hours &quot;
+  &amp; TEXT( ROUND( MOD( (LastEnd__c - LastStart__c ) * 24 * 60, 60 ), 0 ) ) &amp; &quot; minutes&quot;,
+  &quot;&quot;
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Duration</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -5,6 +5,7 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 
 	private Integer sequence;
 	private Integer lastSequence;
+	private Integer batchSize;
 
 	@TestVisible
 	private String sobjectName;
@@ -17,9 +18,8 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 	/**
 	 * @description Instanciate constructor with parameters, is called in the finish method
 	 * @param  sequence		Defines the Object Sequence to delete in this instance
-	 * @param  lastSequence Defines the last Object sequence to execute
 	 */
-	public MaskSObjectBatch(Integer sequence, Integer lastSequence){
+	public MaskSObjectBatch(Integer sequence){
 		setParams(sequence);
 	}
 
@@ -36,13 +36,16 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 	 * @return    QueryLocator
 	 */
 	public Database.QueryLocator start(Database.BatchableContext BC){
-		//TODO Use batch size
+		//update job informations
+		AsyncApexJob job = getJob(BC.getJobId());
+		upsert new MaskSObject__c(APIName__c = this.sobjectName, LastStart__c = System.now(), LastEnd__c = null,
+			LastJobId__c = job.Id, JobItemsProcessed__c = job.JobItemsProcessed, TotalJobItems__c = job.TotalJobItems,
+			NumberOfErrors__c = job.NumberOfErrors) APIName__c;
 
 		String query = 'SELECT Id, ' + String.join(this.queryFields, ',') + ' FROM ' + String.escapeSingleQuotes(this.sobjectName);
 		if(String.isNotBlank(whereClause)){
 			query += ' WHERE ' + whereClause;
 		}
-		System.debug(LoggingLevel.INFO, query);
 		return Database.getQueryLocator(query);
 	}
 
@@ -56,9 +59,11 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 
 		SObjectType sObjType = ((SObject) Type.forName(this.sobjectName).newInstance()).getSObjectType();
 		if (sObjType.getDescribe().isUpdateable()) {
-			//Database.update(scope, false);
-			update(scope);
+			Database.update(scope, false);
 		}
+		AsyncApexJob job = getJob(BC.getJobId());
+		upsert new MaskSObject__c(APIName__c = this.sobjectName, TotalJobItems__c = job.TotalJobItems,
+			JobItemsProcessed__c = job.JobItemsProcessed + 1, NumberOfErrors__c = job.NumberOfErrors) APIName__c;
 	}
 
 	/**
@@ -66,9 +71,12 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 	 * @param  BC BatchableContext
 	 */
 	public void finish(Database.BatchableContext BC){
+		upsert new MaskSObject__c(APIName__c = this.sobjectName, LastEnd__c = System.now()) APIName__c;
+		//TODO REMOVE DEBUG
+		System.debug(LoggingLevel.INFO, 'SObject ' + this.sobjectName + ' seq ' + this.sequence + ' batchsize ' + this.batchSize);
 		//call the batch only if the Object list is not the last one
 		if(sequence < lastSequence){
-			Database.executeBatch(new MaskSObjectBatch(sequence, lastSequence));
+			Database.executeBatch(new MaskSObjectBatch(sequence), this.batchSize);
 		}
 	}
 
@@ -83,18 +91,23 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 		}
 
 		//get the next sequences to avoid issue with missing numbers
-		List<MaskSObject__c> settings = [SELECT APIName__c, Sequence__c, WhereClause__c
-			,(SELECT APIName__c, Action__c FROM MaskSObjectFields__r) FROM MaskSObject__c
-			WHERE Sequence__c >:sequence ORDER BY Sequence__c];
+		List<MaskSObject__c> settings = MaskSObjectUtils.getMaskSObjectList(sequence);
 
 		//store the lastIndex to end the process
 		if(lastSequence == null){
 			//since the list is sorted by sequence, the last index is the last sequence
 			this.lastSequence = Integer.valueOf(settings.get(settings.size() - 1).Sequence__c);
 		}
+
 		//use the first item of the list
 		MaskSObject__c setting = settings.get(0);
 		this.sequence = Integer.valueOf(setting.Sequence__c);
+
+		//batch size for the next execution is in the next list index
+		if(settings.size() > 1){
+			this.batchSize = settings.get(1)?.BatchSize__c != null ? Integer.valueOf(settings.get(1).BatchSize__c) : 200;
+		}
+
 		this.sobjectName = setting.APIName__c;
 		this.whereClause = setting.WhereClause__c;
 
@@ -118,5 +131,9 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 			Schema.DescribeFieldResult fr = fields.get(field.toLowerCase()).getDescribe();
 			fieldType.put(field, fr.getType());
 		}
+	}
+
+	private AsyncApexJob getJob(Id jobId){
+		return [SELECT JobItemsProcessed, TotalJobItems, NumberOfErrors FROM AsyncApexJob WHERE Id=:jobId];
 	}
 }

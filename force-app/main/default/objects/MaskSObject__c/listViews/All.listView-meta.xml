@@ -3,6 +3,7 @@
     <fullName>All</fullName>
     <columns>Name__c</columns>
     <columns>Sequence__c</columns>
+    <columns>Name__c</columns>
     <columns>APIName__c</columns>
     <columns>Batch_size__c</columns>
     <columns>WhereClause__c</columns>

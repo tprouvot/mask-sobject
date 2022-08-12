@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ActionType__c</fullName>
+    <description>Indicates the type of action configured</description>
+    <externalId>false</externalId>
+    <label>Action Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Action__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Hardcoded</fullName>
+                <default>false</default>
+                <label>Hardcoded</label>
+            </value>
+            <value>
+                <fullName>Regex</fullName>
+                <default>false</default>
+                <label>Regex</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Replace</controllingFieldValue>
+            <valueName>Hardcoded</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Replace</controllingFieldValue>
+            <valueName>Regex</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

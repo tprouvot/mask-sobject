@@ -25,7 +25,9 @@ Database.executeBatch(new MaskSObjectBatch());
 - When creating / refreshing a sandbox:
 <img alt="Configure post copy class" src="./screenshots/sandbox-postcopy.png" />
 **WARNING**: if you choose this option, you need a Partial Copy Sandbox or a Full Copy Sandbox and data configuration on Production.
+
 - (WIP) Manually using [Launch Batch LWC](https://github.com/tprouvot/launch-batch-lwc)
+
 ## Deploy to Salesforce
 
 Checkout the repo and deploy it with sfdx:

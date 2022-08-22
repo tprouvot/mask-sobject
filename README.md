@@ -23,10 +23,20 @@ The configuration is based on two objects:
 Database.executeBatch(new MaskSObjectBatch());
 ```
 - When creating / refreshing a sandbox:
+
 <img alt="Configure post copy class" src="./screenshots/sandbox-postcopy.png" />
+
 **WARNING**: if you choose this option, you need a Partial Copy Sandbox or a Full Copy Sandbox and data configuration on Production.
 
 - (WIP) Manually using [Launch Batch LWC](https://github.com/tprouvot/launch-batch-lwc)
+
+## How does it works ?
+- Randomize: Generate a X char String based on `Crypto.generateAesKey(128);` method where X is the number of characters of the input to anonymize.
+	- > 'SALESFORCE.COM FRANCE' => 'iih5e2UT0qGZ8fJaNCbTT'
+- Obfuscate: Replace and lowercase following chars `{'a', 'e', 'i', 'o', '1', '2', '5', '6'};` by `'x'`
+	- > 'SALESFORCE.COM FRANCE' => 'sxlxsfxrcx.cxm frxncx'
+- Erase:
+	- > 'SALESFORCE.COM FRANCE' => ''
 
 ## Deploy to Salesforce
 

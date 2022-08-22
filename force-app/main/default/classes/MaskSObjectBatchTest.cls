@@ -48,4 +48,23 @@ public class MaskSObjectBatchTest {
 		System.assertNotEquals(ASSISTANTNAME, cont.AssistantName, 'The contact AssistantName should be masked');
 		System.assertNotEquals(EMAIL, cont.Email, 'The contact Email should be masked');
 	}
+
+	@isTest
+	static void maskSobjectNameTest(){
+		createTestData();
+
+		Test.startTest();
+		Database.executeBatch(new MaskSObjectBatch('Contact'));
+		Test.stopTest();
+
+		Contact cont = [SELECT Id, LastName, AssistantName, Email FROM Contact LIMIT 1];
+		System.assertNotEquals(LASTNAME, cont.LastName, 'The contact lastname should be masked');
+		System.assertNotEquals(ASSISTANTNAME, cont.AssistantName, 'The contact AssistantName should be masked');
+		System.assertNotEquals(EMAIL, cont.Email, 'The contact Email should be masked');
+
+		Account acc = [SELECT Id, Name, Phone FROM Account LIMIT 1];
+		System.assertEquals(NAME, acc.Name, 'The account name should not be masked');
+		System.assertEquals(PHONE, acc.Phone, 'The account phone should not be masked');
+
+	}
 }

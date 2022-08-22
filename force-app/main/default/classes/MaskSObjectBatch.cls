@@ -20,14 +20,18 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 	 * @param  sequence		Defines the Object Sequence to delete in this instance
 	 */
 	public MaskSObjectBatch(Integer sequence){
-		setParams(sequence);
+		setParams(sequence, '%');
 	}
 
 	/**
 	 * @description Instanciate constructor without parameters, is called by the schedulable class
 	 */
 	public MaskSObjectBatch() {
-		setParams(null);
+		setParams(null, '%');
+	}
+
+	public MaskSObjectBatch(String sObjectName){
+		setParams(sequence, sObjectName);
 	}
 
 	/**
@@ -72,8 +76,6 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 	 */
 	public void finish(Database.BatchableContext BC){
 		upsert new MaskSObject__c(APIName__c = this.sobjectName, LastEnd__c = System.now()) APIName__c;
-		//TODO REMOVE DEBUG
-		System.debug(LoggingLevel.INFO, 'SObject ' + this.sobjectName + ' seq ' + this.sequence + ' batchsize ' + this.batchSize);
 		//call the batch only if the Object list is not the last one
 		if(sequence < lastSequence){
 			Database.executeBatch(new MaskSObjectBatch(sequence), this.batchSize);
@@ -84,14 +86,14 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 	 * @description Instanciate the parameters of the batch :the sobjectName to parse and his sequence
 	 * @param  sequence Object order of execution
 	 */
-	private void setParams(Integer sequence){
+	private void setParams(Integer sequence, String sobjectName){
 		//if param is null it means the method was called from the scheduled job
 		if(sequence == null){
 			sequence = 0;
 		}
 
 		//get the next sequences to avoid issue with missing numbers
-		List<MaskSObject__c> settings = MaskSObjectUtils.getMaskSObjectList(sequence);
+		List<MaskSObject__c> settings = MaskSObjectUtils.getMaskSObjectList(sequence, sobjectName);
 
 		//store the lastIndex to end the process
 		if(lastSequence == null){

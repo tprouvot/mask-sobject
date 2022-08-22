@@ -19,9 +19,15 @@ The configuration is based on two objects:
 ## How To Run Data Masking ?
 
 - With execute anonymous and the following code
+	- To run anonymisation on all objects
 ```java
-Database.executeBatch(new MaskSObjectBatch());
+MaskSObjectUtils.executeBatch('%');
 ```
+- To run on a particular SObject
+```java
+MaskSObjectUtils.executeBatch('Contact');
+```
+
 - When creating / refreshing a sandbox:
 
 <img alt="Configure post copy class" src="./screenshots/sandbox-postcopy.png" />

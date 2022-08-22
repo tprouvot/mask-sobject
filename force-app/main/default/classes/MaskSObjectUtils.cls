@@ -1,14 +1,27 @@
 public with sharing class MaskSObjectUtils {
 
 	/**
+	 * @description Allow users to run the batch for all or a particular object
+	 * @param sobjectName
+	 */
+	public static void executeBatch(String sobjectName){
+		List<MaskSObject__c> settings = MaskSObjectUtils.getMaskSObjectList(0, sobjectName);
+		if(!settings.isEmpty()){
+			Integer batchSize = settings.get(0).BatchSize__c != null ? Integer.valueOf(settings.get(0).BatchSize__c) : 200;
+			Database.executeBatch(new MaskSObjectBatch(), batchSize);
+		}
+	}
+
+	/**
 	 * @description  Returns the list of MaskSObject__c after the sequence parameter
-	 * @param sequence
+	 * @param sequence : Minimum sequence number to retrieve
+	 * @param sobjectName : sobjectName to retrieve, can be '%'
 	 * @return  `List<MaskSObject__c>`
 	 */
-	public static List<MaskSObject__c> getMaskSObjectList(Integer sequence){
+	public static List<MaskSObject__c> getMaskSObjectList(Integer sequence, String sobjectName){
 		return [SELECT APIName__c, Sequence__c, WhereClause__c, BatchSize__c
 			,(SELECT APIName__c, Action__c FROM MaskSObjectFields__r) FROM MaskSObject__c
-			WHERE Sequence__c >:sequence ORDER BY Sequence__c];
+			WHERE Sequence__c >:sequence AND APIName__c LIKE :sobjectName ORDER BY Sequence__c];
 	}
 
 	/**

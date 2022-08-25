@@ -36,13 +36,23 @@ MaskSObjectUtils.executeBatch('Contact');
 
 - (WIP) Manually using [Launch Batch LWC](https://github.com/tprouvot/launch-batch-lwc)
 
-## How does it works ?
-- Randomize: Generate a X char String based on `Crypto.generateAesKey(128);` method where X is the number of characters of the input to anonymize.
-	- > 'SALESFORCE.COM FRANCE' => 'iih5e2UT0qGZ8fJaNCbTT'
-- Obfuscate: Replace and lowercase following chars `{'a', 'e', 'i', 'o', '1', '2', '5', '6'};` by `'x'`
-	- > 'SALESFORCE.COM FRANCE' => 'sxlxsfxrcx.cxm frxncx'
+## Actions Types
+- Randomize:
+	- Generate a X char String based on `Crypto.generateAesKey(128);` method where X is the number of characters of the input to anonymize.
+		> 'SALESFORCE.COM FRANCE' => 'iih5e2UT0qGZ8fJaNCbTT'
+- Obfuscate:
+	- Replace and lowercase following chars `{'a', 'e', 'i', 'o', '1', '2', '5', '6'};` by `'x'`
+  		> 'SALESFORCE.COM FRANCE' => 'sxlxsfxrcx.cxm frxncx'
 - Erase:
 	- > 'SALESFORCE.COM FRANCE' => ''
+
+## Fields specificity
+- Email
+	- We mask only the part **before** the domain name
+  		> 'jdoe@salesforce.com' => 'iih5@salesforce.com'
+- Phone
+	- We mask only the part **after** the two first char
+  		> '0612345678' => '0600340078'
 
 ## Deploy to Salesforce
 

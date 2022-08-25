@@ -3,6 +3,8 @@
  */
 public with sharing class MaskSObjectBatch implements Database.Batchable<sObject>{
 
+	private List<MaskSObjectDictionaryModel> dictionary;
+
 	private Integer sequence;
 	private Integer lastSequence;
 	private Integer batchSize;
@@ -56,8 +58,12 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 	public void execute(Database.BatchableContext BC, List<SObject> scope){
 
 		for(SObject sobj : scope){
+			//TODO init variable on first select to be able to know if dictionary is required
+			Boolean dictionaryNeeded = true;
+			Integer random = dictionaryNeeded ? 32 : null;
+			MaskSObjectDictionaryModel data = dictionaryNeeded ? dictionary.get(random) : null;
 			for(MaskSObjectField__c field : this.fields){
-				MaskSObjectUtils.maskField(fieldType, field, sobj);
+				MaskSObjectUtils.maskField(fieldType, field, sobj, data);
 			}
 		}
 
@@ -90,6 +96,13 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 		//if param is null it means the method was called from the scheduled job
 		if(sequence == null){
 			sequence = 0;
+		}
+
+		//TODO instanciate dictionary only if the records contains fields which needs dictionay
+		if(dictionary == null){
+			StaticResource sr = [SELECT Body FROM StaticResource WHERE Name = 'MaskSObjectDictionary' LIMIT 1];
+			this.dictionary = (List<MaskSObjectDictionaryModel>)JSON.deserializeStrict(sr.Body.toString(),
+			List<MaskSObjectDictionaryModel>.class);
 		}
 
 		//get the next sequences to avoid issue with missing numbers

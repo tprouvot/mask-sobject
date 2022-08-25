@@ -3,6 +3,21 @@
     <description>Give the required permissions to create / update / delete MaskSObject objects configuration.</description>
     <fieldPermissions>
         <editable>true</editable>
+        <field>MaskSObjectField__c.ActionType__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>MaskSObjectField__c.Name__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>MaskSObjectField__c.Value__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>MaskSObject__c.BatchSize__c</field>
         <readable>true</readable>
     </fieldPermissions>

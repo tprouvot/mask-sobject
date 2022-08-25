@@ -20,7 +20,7 @@ public with sharing class MaskSObjectUtils {
 	 */
 	public static List<MaskSObject__c> getMaskSObjectList(Integer sequence, String sobjectName){
 		return [SELECT APIName__c, Sequence__c, WhereClause__c, BatchSize__c
-			,(SELECT APIName__c, Action__c FROM MaskSObjectFields__r) FROM MaskSObject__c
+			,(SELECT APIName__c, Action__c, ActionType__c, Value__c FROM MaskSObjectFields__r) FROM MaskSObject__c
 			WHERE Sequence__c >:sequence AND APIName__c LIKE :sobjectName ORDER BY Sequence__c];
 	}
 
@@ -48,13 +48,21 @@ public with sharing class MaskSObjectUtils {
 		return val;
 	}
 
-	public static void maskField(Map<String, Schema.DisplayType> fieldType, MaskSObjectField__c field, SObject sobj){
+	public static void maskField(Map<String, Schema.DisplayType> fieldType, MaskSObjectField__c field, SObject sobj, MaskSObjectDictionaryModel data){
 		String val = (String)sobj.get(field.APIName__c);
 		if(val != null){
 			String retVal;
 
 			if(MaskSObjectConstants.ACTION_ERASE.equals(field.Action__c)){
 				retVal = null;
+			} else if(MaskSObjectConstants.ACTION_REPLACE.equals(field.Action__c)){
+				if(MaskSObjectConstants.ACTION_TYPE_HARDCODED.equals(field.ActionType__c)){
+					retVal = field.Value__c;
+				} else if(MaskSObjectConstants.ACTION_TYPE_DICT_FIRST.equals(field.ActionType__c)){
+					retVal = data.firstName;
+				} else if(MaskSObjectConstants.ACTION_TYPE_DICT_LAST.equals(field.ActionType__c)){
+					retVal = data.lastName;
+				}
 			} else {
 				String prefix = '';
 				String suffix = '';

@@ -59,7 +59,7 @@ public with sharing class MaskSObjectUtils {
 			} else if(MaskSObjectConstants.ACTION_REPLACE.equals(field.Action__c)){
 				if(MaskSObjectConstants.ACTION_TYPE_HARDCODED.equals(field.ActionType__c)){
 					retVal = field.Value__c;
-				} else if(field.ActionType__c.contains(MaskSObjectConstants.ACTION_TYPE_DICT)){
+				} else if(field.ActionType__c.startsWith(MaskSObjectConstants.ACTION_TYPE_DICT)){
 					retVal = getDictionaryValue(val, field, data);
 				}
 			} else {

@@ -34,7 +34,7 @@ MaskSObjectUtils.executeBatch('Contact');
 
 **WARNING**: if you choose this option, you need a Partial Copy Sandbox or a Full Copy Sandbox and data configuration on Production.
 
-- (WIP) Manually using [Launch Batch LWC](https://github.com/tprouvot/launch-batch-lwc)
+- Manually using [Launch Batch LWC](https://github.com/tprouvot/launch-batch-lwc)
 
 ## Actions
 - Randomize:

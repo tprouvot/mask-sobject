@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AllowExecutionOnProd__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Allow Mask SObject Framework&apos;s execution on PROD env.</description>
+    <externalId>false</externalId>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <inlineHelpText>To allow execution on production, you must check this option.</inlineHelpText>
+    <label>Allow Execution On Prod</label>
+    <type>Checkbox</type>
+</CustomField>

@@ -11,8 +11,8 @@ Mask SObject Framework is not an official Salesforce product, it has not been of
 
 The configuration is based on two objects:
 
-- MaskSObject__c  : which define the object to mask with options such as the order sequence and the where clause
-- MaskSObjectField___c : which define the fields to mask and the option of masking (erase, randomize ...)
+- MaskSObject__c : object to mask with options such as the order sequence and the where clause
+- MaskSObjectField___c : field to mask and the option of masking (erase, randomize ...)
 
 
 [![SObjedt config](./screenshots/2022-08-10_09-42-09.png)](./screenshots/2022-08-10_09-42-09.png)

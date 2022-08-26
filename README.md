@@ -14,8 +14,19 @@ The configuration is based on two objects:
 - MaskSObject__c  : which define the object to mask with options such as the order sequence and the where clause
 - MaskSObjectField___c : which define the fields to mask and the option of masking (erase, randomize ...)
 
+
 [![SObjedt config](./screenshots/2022-08-10_09-42-09.png)](./screenshots/2022-08-10_09-42-09.png)
 
+To assign required pset run followinf command:
+```sh
+sfdx force:apex:execute -f scripts/assignPset.apex
+```
+
+
+If you want to insert demo data, please run following command:
+```sh
+sfdx force:apex:execute -f scripts/importDemo.apex
+```
 ## How To Run Data Masking ?
 
 - With execute anonymous and the following code

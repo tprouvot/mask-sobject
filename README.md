@@ -69,12 +69,20 @@ You can edit this file and replace the current values with yours if you need mor
 Website used to generate the data https://www.mockaroo.com/
 
 ## Fields specificity
-- Email
+- Standard Email
 	- We mask only the part **before** the domain name
   		> 'jdoe@salesforce.com' => 'iih5@salesforce.com'
-- Phone
+- Standard Phone
 	- We mask only the part **after** the two first char
   		> '0612345678' => '0600340078'
+
+## Configure Settings
+You can customize some options by editing MaskSObjectSettings__mdt Default Custom Metadata
+- Allow execution on prod : enable this option to be able to run the batch on PROD (otherwise soql query returns no rows)
+- Configure the number of digits to preserve in standard Phone fields.
+
+
+<img alt="Customize options" src="./screenshots/settings.png" height="200" />
 
 ## Deploy to Salesforce
 

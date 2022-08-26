@@ -18,6 +18,11 @@
                 <label>Hardcoded</label>
             </value>
             <value>
+                <fullName>Dictionary.email</fullName>
+                <default>false</default>
+                <label>Dictionary Email</label>
+            </value>
+            <value>
                 <fullName>Dictionary.firstname</fullName>
                 <default>false</default>
                 <label>Dictionary Firstname</label>
@@ -42,6 +47,10 @@
         <valueSettings>
             <controllingFieldValue>Replace</controllingFieldValue>
             <valueName>Hardcoded</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Replace</controllingFieldValue>
+            <valueName>Dictionary.email</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Replace</controllingFieldValue>

@@ -59,7 +59,9 @@ MaskSObjectUtils.executeBatch('Contact');
 - Replace:
 	- Actions Types:
 		- Hardcoded: You must insert an hardocoded value in Value__c field to replace the current field value with hardcoded one.
-		- Dictionary: You can choose different dictionary fields to replace the current value (Firstname, Lastname, Fullname). A random line from MaskSObjectDictionary.json file will be selected to fill the field.
+		- Dictionary:
+			- You can choose different dictionary fields to replace the current value **Firstname, Lastname, Fullname, Email**.
+			- A random line from MaskSObjectDictionary.json file will be selected to fill the field.
 		 > Dictionary Firstname : 'Thomas' => 'Corie', Dictionary Fullname : 'John Doe' => 'Corie Joberne' ...
 
 ## Data Dictionary

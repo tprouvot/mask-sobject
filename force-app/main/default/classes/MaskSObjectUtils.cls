@@ -101,6 +101,8 @@ public with sharing class MaskSObjectUtils {
 			retVal = data.lastName;
 		} else if(MaskSObjectConstants.ACTION_TYPE_DICT_FULL.equals(field.ActionType__c)){
 			retVal = data.firstName + ' ' + data.lastName;
+		} else if(MaskSObjectConstants.ACTION_TYPE_DICT_EMAIL.equals(field.ActionType__c)){
+			retVal = data.email;
 		}
 		return retVal;
 	}

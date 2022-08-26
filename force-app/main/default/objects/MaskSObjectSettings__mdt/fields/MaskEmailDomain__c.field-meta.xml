@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>MaskEmailDomain__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>By default, we don&apos;t mask email domain, to enable this feature check this option.</description>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <inlineHelpText>To enable domain masking on emails, check this option.</inlineHelpText>
+    <label>Mask Email Domain</label>
+    <type>Checkbox</type>
+</CustomField>

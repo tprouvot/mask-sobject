@@ -54,7 +54,7 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 		if(!options.AllowExecutionOnProd__c && !MaskSObjectUtils.isSandbox()){
 			//build a query that returns no rows to prevent batch execution
 			query += ' WHERE Id=null';
-			System.debug(LoggingLevel.WARN, 'MaskSObjectBatch execution on production is forbiden, query updated to return 0 rows');
+			System.debug(LoggingLevel.WARN, 'MaskSObjectBatch execution on production is forbidden, query updated to return 0 rows');
 		} else if(String.isNotBlank(whereClause)){
 			query += ' WHERE ' + whereClause;
 		}

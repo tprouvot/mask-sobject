@@ -2,7 +2,7 @@ public with sharing class MaskSObjectDictionaryModel {
 
 	public String firstName;
 	public String lastName;
-	public String mobile;
+	public String phone;
 	public String email;
 	public String streetNumber;
 	public String street;

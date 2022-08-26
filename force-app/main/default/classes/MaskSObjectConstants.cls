@@ -12,6 +12,8 @@ public with sharing class MaskSObjectConstants {
 
 	//ActionType__c
 	public static final String ACTION_TYPE_HARDCODED = 'Hardcoded';
-	public static final String ACTION_TYPE_DICT_FIRST = 'Dictionary.firstname';
-	public static final String ACTION_TYPE_DICT_LAST = 'Dictionary.lastname';
+	public static final String ACTION_TYPE_DICT = 'Dictionary';
+	public static final String ACTION_TYPE_DICT_FIRST = ACTION_TYPE_DICT + '.firstname';
+	public static final String ACTION_TYPE_DICT_LAST = ACTION_TYPE_DICT + '.lastname';
+	public static final String ACTION_TYPE_DICT_FULL = ACTION_TYPE_DICT + '.fullname';
 }

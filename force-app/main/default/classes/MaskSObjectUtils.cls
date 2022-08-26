@@ -58,10 +58,8 @@ public with sharing class MaskSObjectUtils {
 			} else if(MaskSObjectConstants.ACTION_REPLACE.equals(field.Action__c)){
 				if(MaskSObjectConstants.ACTION_TYPE_HARDCODED.equals(field.ActionType__c)){
 					retVal = field.Value__c;
-				} else if(MaskSObjectConstants.ACTION_TYPE_DICT_FIRST.equals(field.ActionType__c)){
-					retVal = data.firstName;
-				} else if(MaskSObjectConstants.ACTION_TYPE_DICT_LAST.equals(field.ActionType__c)){
-					retVal = data.lastName;
+				} else if(field.ActionType__c.contains(MaskSObjectConstants.ACTION_TYPE_DICT)){
+					retVal = getDictionaryValue(val, field, data);
 				}
 			} else {
 				String prefix = '';
@@ -90,5 +88,21 @@ public with sharing class MaskSObjectUtils {
 			}
 			sobj.put(field.APIName__c, retVal);
 		}
+	}
+
+	public static String getDictionaryValue(String val, MaskSObjectField__c field, MaskSObjectDictionaryModel data){
+		String retVal;
+		if(MaskSObjectConstants.ACTION_TYPE_DICT_FIRST.equals(field.ActionType__c)){
+			retVal = data.firstName;
+		} else if(MaskSObjectConstants.ACTION_TYPE_DICT_LAST.equals(field.ActionType__c)){
+			retVal = data.lastName;
+		} else if(MaskSObjectConstants.ACTION_TYPE_DICT_FULL.equals(field.ActionType__c)){
+			retVal = data.firstName + ' ' + data.lastName;
+		}
+		return retVal;
+	}
+
+	public static Integer getRandomInt(Integer max){
+		return Integer.valueof((Math.random() * max));
 	}
 }

@@ -23,6 +23,11 @@
                 <label>Dictionary Firstname</label>
             </value>
             <value>
+                <fullName>Dictionary.fullname</fullName>
+                <default>false</default>
+                <label>Dictionary Fullname</label>
+            </value>
+            <value>
                 <fullName>Dictionary.lastname</fullName>
                 <default>false</default>
                 <label>Dictionary Lastname</label>
@@ -41,6 +46,10 @@
         <valueSettings>
             <controllingFieldValue>Replace</controllingFieldValue>
             <valueName>Dictionary.firstname</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Replace</controllingFieldValue>
+            <valueName>Dictionary.fullname</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Replace</controllingFieldValue>

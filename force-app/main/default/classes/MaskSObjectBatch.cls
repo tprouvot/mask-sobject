@@ -58,10 +58,8 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 	public void execute(Database.BatchableContext BC, List<SObject> scope){
 
 		for(SObject sobj : scope){
-			//TODO init variable on first select to be able to know if dictionary is required
-			Boolean dictionaryNeeded = true;
-			Integer random = dictionaryNeeded ? 32 : null;
-			MaskSObjectDictionaryModel data = dictionaryNeeded ? dictionary.get(random) : null;
+			Integer random = dictionary != null ? MaskSObjectUtils.getRandomInt(dictionary.size()) : null;
+			MaskSObjectDictionaryModel data = dictionary != null ? dictionary.get(random) : null;
 			for(MaskSObjectField__c field : this.fields){
 				MaskSObjectUtils.maskField(fieldType, field, sobj, data);
 			}

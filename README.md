@@ -36,15 +36,26 @@ MaskSObjectUtils.executeBatch('Contact');
 
 - (WIP) Manually using [Launch Batch LWC](https://github.com/tprouvot/launch-batch-lwc)
 
-## Actions Types
+## Actions
 - Randomize:
 	- Generate a X char String based on `Crypto.generateAesKey(128);` method where X is the number of characters of the input to anonymize.
 		> 'SALESFORCE.COM FRANCE' => 'iih5e2UT0qGZ8fJaNCbTT'
 - Obfuscate:
 	- Replace and lowercase following chars `{'a', 'e', 'i', 'o', '1', '2', '5', '6'};` by `'x'`
-  		> 'SALESFORCE.COM FRANCE' => 'sxlxsfxrcx.cxm frxncx'
+		> 'SALESFORCE.COM FRANCE' => 'sxlxsfxrcx.cxm frxncx'
 - Erase:
 	- > 'SALESFORCE.COM FRANCE' => ''
+- Replace:
+	- Actions Types:
+		- Hardcoded: You must insert an hardocoded value in Value__c field to replace the current field value with hardcoded one.
+		- Dictionary: You can choose different dictionary fields to replace the current value (Firstname, Lastname, Fullname). A random line from MaskSObjectDictionary.json file will be selected to fill the field.
+		 > Dictionary Firstname : 'Thomas' => 'Corie', Dictionary Fullname : 'John Doe' => 'Corie Joberne' ...
+
+## Data Dictionary
+The data dictionary is stored in **MaskSObjectDictionary.json StaticResource**.
+You can edit this file and replace the current values with yours if you need more common names for a particular country for example.
+
+Website used to generate the data https://www.mockaroo.com/
 
 ## Fields specificity
 - Email

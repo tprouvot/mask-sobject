@@ -7,8 +7,9 @@ public with sharing class MaskSObjectUtils {
 	public static void executeBatch(String sobjectName){
 		List<MaskSObject__c> settings = MaskSObjectUtils.getMaskSObjectList(0, sobjectName);
 		if(!settings.isEmpty()){
-			Integer batchSize = settings.get(0).BatchSize__c != null ? Integer.valueOf(settings.get(0).BatchSize__c) : 200;
-			Database.executeBatch(new MaskSObjectBatch(), batchSize);
+			MaskSObject__c setting = settings.get(0);
+			Integer batchSize = setting.BatchSize__c != null ? Integer.valueOf(setting.BatchSize__c) : 200;
+			Database.executeBatch(new MaskSObjectBatch(sobjectName), batchSize);
 		}
 	}
 
@@ -20,7 +21,7 @@ public with sharing class MaskSObjectUtils {
 	 */
 	public static List<MaskSObject__c> getMaskSObjectList(Integer sequence, String sobjectName){
 		return [SELECT APIName__c, Sequence__c, WhereClause__c, BatchSize__c
-			,(SELECT APIName__c, Action__c FROM MaskSObjectFields__r) FROM MaskSObject__c
+			,(SELECT APIName__c, Action__c, ActionType__c, Value__c FROM MaskSObjectFields__r) FROM MaskSObject__c
 			WHERE Sequence__c >:sequence AND APIName__c LIKE :sobjectName ORDER BY Sequence__c];
 	}
 
@@ -48,13 +49,19 @@ public with sharing class MaskSObjectUtils {
 		return val;
 	}
 
-	public static void maskField(Map<String, Schema.DisplayType> fieldType, MaskSObjectField__c field, SObject sobj){
+	public static void maskField(Map<String, Schema.DisplayType> fieldType, MaskSObjectField__c field, SObject sobj, MaskSObjectDictionaryModel data){
 		String val = (String)sobj.get(field.APIName__c);
 		if(val != null){
 			String retVal;
 
 			if(MaskSObjectConstants.ACTION_ERASE.equals(field.Action__c)){
 				retVal = null;
+			} else if(MaskSObjectConstants.ACTION_REPLACE.equals(field.Action__c)){
+				if(MaskSObjectConstants.ACTION_TYPE_HARDCODED.equals(field.ActionType__c)){
+					retVal = field.Value__c;
+				} else if(field.ActionType__c.startsWith(MaskSObjectConstants.ACTION_TYPE_DICT)){
+					retVal = getDictionaryValue(val, field, data);
+				}
 			} else {
 				String prefix = '';
 				String suffix = '';
@@ -82,5 +89,21 @@ public with sharing class MaskSObjectUtils {
 			}
 			sobj.put(field.APIName__c, retVal);
 		}
+	}
+
+	public static String getDictionaryValue(String val, MaskSObjectField__c field, MaskSObjectDictionaryModel data){
+		String retVal;
+		if(MaskSObjectConstants.ACTION_TYPE_DICT_FIRST.equals(field.ActionType__c)){
+			retVal = data.firstName;
+		} else if(MaskSObjectConstants.ACTION_TYPE_DICT_LAST.equals(field.ActionType__c)){
+			retVal = data.lastName;
+		} else if(MaskSObjectConstants.ACTION_TYPE_DICT_FULL.equals(field.ActionType__c)){
+			retVal = data.firstName + ' ' + data.lastName;
+		}
+		return retVal;
+	}
+
+	public static Integer getRandomInt(Integer max){
+		return Integer.valueof((Math.random() * max));
 	}
 }

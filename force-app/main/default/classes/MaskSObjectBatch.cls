@@ -3,6 +3,8 @@
  */
 public with sharing class MaskSObjectBatch implements Database.Batchable<sObject>{
 
+	private List<MaskSObjectDictionaryModel> dictionary;
+
 	private Integer sequence;
 	private Integer lastSequence;
 	private Integer batchSize;
@@ -56,8 +58,10 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 	public void execute(Database.BatchableContext BC, List<SObject> scope){
 
 		for(SObject sobj : scope){
+			Integer random = dictionary != null ? MaskSObjectUtils.getRandomInt(dictionary.size()) : null;
+			MaskSObjectDictionaryModel data = dictionary != null ? dictionary.get(random) : null;
 			for(MaskSObjectField__c field : this.fields){
-				MaskSObjectUtils.maskField(fieldType, field, sobj);
+				MaskSObjectUtils.maskField(fieldType, field, sobj, data);
 			}
 		}
 
@@ -116,11 +120,21 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 		//store the fields to mask for the query
 		this.fields = setting.MaskSObjectFields__r;
 		queryFields = new List<String>();
+		Boolean requireDictionary = false;
 		for(MaskSObjectField__c field : setting.MaskSObjectFields__r){
 			this.queryFields.add(field.APIName__c);
+			if(!requireDictionary && field.ActionType__c != null && field.ActionType__c.startsWith(MaskSObjectConstants.ACTION_TYPE_DICT)){
+				requireDictionary = true;
+			}
 		}
 
-		//store describe field resultto set it only on new SObject iteration
+		if(this.dictionary == null && requireDictionary){
+			StaticResource sr = [SELECT Body FROM StaticResource WHERE Name = 'MaskSObjectDictionary' LIMIT 1];
+			this.dictionary = (List<MaskSObjectDictionaryModel>)JSON.deserializeStrict(sr.Body.toString(),
+			List<MaskSObjectDictionaryModel>.class);
+		}
+
+		//store describe field result to set it only on new SObject iteration
 		setFieldsTypes();
 	}
 

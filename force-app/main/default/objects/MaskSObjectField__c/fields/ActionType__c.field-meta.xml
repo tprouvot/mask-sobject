@@ -18,8 +18,24 @@
                 <label>Hardcoded</label>
             </value>
             <value>
+                <fullName>Dictionary.firstname</fullName>
+                <default>false</default>
+                <label>Dictionary Firstname</label>
+            </value>
+            <value>
+                <fullName>Dictionary.fullname</fullName>
+                <default>false</default>
+                <label>Dictionary Fullname</label>
+            </value>
+            <value>
+                <fullName>Dictionary.lastname</fullName>
+                <default>false</default>
+                <label>Dictionary Lastname</label>
+            </value>
+            <value>
                 <fullName>Regex</fullName>
                 <default>false</default>
+                <isActive>false</isActive>
                 <label>Regex</label>
             </value>
         </valueSetDefinition>
@@ -29,7 +45,15 @@
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Replace</controllingFieldValue>
-            <valueName>Regex</valueName>
+            <valueName>Dictionary.firstname</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Replace</controllingFieldValue>
+            <valueName>Dictionary.fullname</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Replace</controllingFieldValue>
+            <valueName>Dictionary.lastname</valueName>
         </valueSettings>
     </valueSet>
 </CustomField>

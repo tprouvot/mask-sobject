@@ -11,11 +11,22 @@ Mask SObject Framework is not an official Salesforce product, it has not been of
 
 The configuration is based on two objects:
 
-- MaskSObject__c  : which define the object to mask with options such as the order sequence and the where clause
-- MaskSObjectField___c : which define the fields to mask and the option of masking (erase, randomize ...)
+- MaskSObject__c : object to mask with options such as the order sequence and the where clause
+- MaskSObjectField___c : field to mask and the option of masking (erase, randomize ...)
+
 
 [![SObjedt config](./screenshots/2022-08-10_09-42-09.png)](./screenshots/2022-08-10_09-42-09.png)
 
+To assign required pset run following command:
+```sh
+sfdx force:apex:execute -f scripts/assignPset.apex
+```
+
+
+If you want to insert demo data, please run following command:
+```sh
+sfdx force:apex:execute -f scripts/importDemo.apex
+```
 ## How To Run Data Masking ?
 
 - With execute anonymous and the following code
@@ -34,17 +45,28 @@ MaskSObjectUtils.executeBatch('Contact');
 
 **WARNING**: if you choose this option, you need a Partial Copy Sandbox or a Full Copy Sandbox and data configuration on Production.
 
-- (WIP) Manually using [Launch Batch LWC](https://github.com/tprouvot/launch-batch-lwc)
+- Manually using [Launch Batch LWC](https://github.com/tprouvot/launch-batch-lwc)
 
-## Actions Types
+## Actions
 - Randomize:
 	- Generate a X char String based on `Crypto.generateAesKey(128);` method where X is the number of characters of the input to anonymize.
 		> 'SALESFORCE.COM FRANCE' => 'iih5e2UT0qGZ8fJaNCbTT'
 - Obfuscate:
 	- Replace and lowercase following chars `{'a', 'e', 'i', 'o', '1', '2', '5', '6'};` by `'x'`
-  		> 'SALESFORCE.COM FRANCE' => 'sxlxsfxrcx.cxm frxncx'
+		> 'SALESFORCE.COM FRANCE' => 'sxlxsfxrcx.cxm frxncx'
 - Erase:
 	- > 'SALESFORCE.COM FRANCE' => ''
+- Replace:
+	- Actions Types:
+		- Hardcoded: You must insert an hardocoded value in Value__c field to replace the current field value with hardcoded one.
+		- Dictionary: You can choose different dictionary fields to replace the current value (Firstname, Lastname, Fullname). A random line from MaskSObjectDictionary.json file will be selected to fill the field.
+		 > Dictionary Firstname : 'Thomas' => 'Corie', Dictionary Fullname : 'John Doe' => 'Corie Joberne' ...
+
+## Data Dictionary
+The data dictionary is stored in **MaskSObjectDictionary.json StaticResource**.
+You can edit this file and replace the current values with yours if you need more common names for a particular country for example.
+
+Website used to generate the data https://www.mockaroo.com/
 
 ## Fields specificity
 - Email

@@ -7,8 +7,9 @@ public with sharing class MaskSObjectUtils {
 	public static void executeBatch(String sobjectName){
 		List<MaskSObject__c> settings = MaskSObjectUtils.getMaskSObjectList(0, sobjectName);
 		if(!settings.isEmpty()){
-			Integer batchSize = settings.get(0).BatchSize__c != null ? Integer.valueOf(settings.get(0).BatchSize__c) : 200;
-			Database.executeBatch(new MaskSObjectBatch(), batchSize);
+			MaskSObject__c setting = settings.get(0);
+			Integer batchSize = setting.BatchSize__c != null ? Integer.valueOf(setting.BatchSize__c) : 200;
+			Database.executeBatch(new MaskSObjectBatch(sobjectName), batchSize);
 		}
 	}
 

@@ -17,7 +17,7 @@ The configuration is based on two objects:
 
 [![SObjedt config](./screenshots/2022-08-10_09-42-09.png)](./screenshots/2022-08-10_09-42-09.png)
 
-To assign required pset run followinf command:
+To assign required pset run following command:
 ```sh
 sfdx force:apex:execute -f scripts/assignPset.apex
 ```

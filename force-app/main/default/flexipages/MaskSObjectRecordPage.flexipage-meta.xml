@@ -107,6 +107,12 @@
                         <valueListItems>
                             <value>Action__c</value>
                         </valueListItems>
+                        <valueListItems>
+                            <value>ActionType__c</value>
+                        </valueListItems>
+                        <valueListItems>
+                            <value>Value__c</value>
+                        </valueListItems>
                     </valueList>
                 </componentInstanceProperties>
                 <componentInstanceProperties>

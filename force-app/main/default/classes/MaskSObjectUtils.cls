@@ -1,5 +1,7 @@
 public with sharing class MaskSObjectUtils {
 
+	public static MaskSObjectSettings__mdt options;
+
 	/**
 	 * @description Allow users to run the batch for all or a particular object
 	 * @param sobjectName
@@ -51,6 +53,7 @@ public with sharing class MaskSObjectUtils {
 
 	public static void maskField(Map<String, Schema.DisplayType> fieldType, MaskSObjectField__c field, SObject sobj, MaskSObjectDictionaryModel data){
 		String val = (String)sobj.get(field.APIName__c);
+		options = getOptions();
 		if(val != null){
 			String retVal;
 
@@ -74,8 +77,7 @@ public with sharing class MaskSObjectUtils {
 					}
 					when PHONE{
 						//keep the prefix to prevent VR errors
-						Integer phonePrefixIndex = 2;
-						prefix = val.left(phonePrefixIndex);
+						prefix = val.left((Integer)options.NumberOfDigitToPreserveInPhones__c);
 						val = val.substringAfter(prefix);
 					}
 				}
@@ -105,5 +107,13 @@ public with sharing class MaskSObjectUtils {
 
 	public static Integer getRandomInt(Integer max){
 		return Integer.valueof((Math.random() * max));
+	}
+
+	public static MaskSObjectSettings__mdt getOptions(){
+		return options != null ? options : MaskSObjectSettings__mdt.getInstance('Default');
+	}
+
+	public static Boolean isSandbox(){
+		return [SELECT IsSandbox FROM Organization LIMIT 1].IsSandbox;
 	}
 }

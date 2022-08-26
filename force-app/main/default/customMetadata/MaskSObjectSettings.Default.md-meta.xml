@@ -7,10 +7,6 @@
         <value xsi:type="xsd:boolean">false</value>
     </values>
     <values>
-        <field>MaskEmailDomain__c</field>
-        <value xsi:type="xsd:boolean">false</value>
-    </values>
-    <values>
         <field>NumberOfDigitToPreserveInPhones__c</field>
         <value xsi:type="xsd:double">2.0</value>
     </values>

@@ -42,6 +42,7 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 	 * @return    QueryLocator
 	 */
 	public Database.QueryLocator start(Database.BatchableContext BC){
+		MaskSObjectSettings__mdt options = MaskSObjectUtils.getOptions();
 		//update job informations
 		AsyncApexJob job = getJob(BC.getJobId());
 		upsert new MaskSObject__c(APIName__c = this.sobjectName, LastStart__c = System.now(), LastEnd__c = null,
@@ -49,7 +50,12 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 			NumberOfErrors__c = job.NumberOfErrors) APIName__c;
 
 		String query = 'SELECT Id, ' + String.join(this.queryFields, ',') + ' FROM ' + String.escapeSingleQuotes(this.sobjectName);
-		if(String.isNotBlank(whereClause)){
+
+		if(!options.AllowExecutionOnProd__c && !MaskSObjectUtils.isSandbox()){
+			//build a query that returns no rows to prevent batch execution
+			query += ' WHERE Id=null';
+			System.debug(LoggingLevel.WARN, 'MaskSObjectBatch execution on production is forbiden, query updated to return 0 rows');
+		} else if(String.isNotBlank(whereClause)){
 			query += ' WHERE ' + whereClause;
 		}
 		return Database.getQueryLocator(query);

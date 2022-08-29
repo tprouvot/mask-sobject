@@ -100,7 +100,7 @@ public with sharing class MaskSObjectUtils {
 		} else if(MaskSObjectConstants.ACTION_TYPE_DICT_LAST.equals(field.ActionType__c)){
 			retVal = data.lastName;
 		} else if(MaskSObjectConstants.ACTION_TYPE_DICT_FULL.equals(field.ActionType__c)){
-			retVal = data.firstName + ' ' + data.lastName;
+			retVal = data.fullName;
 		} else if(MaskSObjectConstants.ACTION_TYPE_DICT_EMAIL.equals(field.ActionType__c)){
 			retVal = data.email;
 		}

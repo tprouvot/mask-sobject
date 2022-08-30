@@ -3,19 +3,23 @@ public class MaskSObjectBatchTest {
 
 	@TestVisible private static String NAME = 'Test Mask Data';
 	private static String PHONE = '0606060606';
+	private static String LUHN = '48399322600057';
 	private static String LASTNAME = 'Doe';
 	private static String ASSISTANTNAME = 'Jane DOE';
 	private static String TESTLABEL = 'TEST';
 	private static String EMAIL = 'jdoe@masksobject.com';
+	private static String TITLE = 'Account Executive';
 
 	/**
 	 * @description This method creates required data to test the framework, it is static to be used in
 	 *  MaskSObjectPostCopyTest
 	 */
 	public static void createTestData(){
+
 		List<MaskSObject__c> sobjMask = new List<MaskSObject__c>{
 			new MaskSObject__c(Sequence__c = 1, APIName__c = 'Account'),
-			new MaskSObject__c(Sequence__c = 2, APIName__c = 'Contact', WhereClause__c = 'AssistantName != null', BatchSize__c = 1600)
+			new MaskSObject__c(Sequence__c = 2, APIName__c = 'Contact', WhereClause__c = 'AssistantName != null', BatchSize__c = 1600),
+			new MaskSObject__c(Sequence__c = 3, APIName__c = 'Lead')
 		};
 		insert sobjMask;
 
@@ -24,6 +28,8 @@ public class MaskSObjectBatchTest {
 				Action__c = MaskSObjectConstants.ACTION_OBFUSCATE),
 			new MaskSObjectField__c(MaskSObject__c = sobjMask.get(0).Id, APIName__c = 'Phone',
 				Action__c = MaskSObjectConstants.ACTION_OBFUSCATE),
+			new MaskSObjectField__c(MaskSObject__c = sobjMask.get(0).Id, APIName__c = 'Description',
+				Action__c = MaskSObjectConstants.ACTION_LUHN),
 			new MaskSObjectField__c(MaskSObject__c = sobjMask.get(1).Id, APIName__c = 'FirstName',
 				Action__c = MaskSObjectConstants.ACTION_REPLACE, ActionType__c = MaskSObjectConstants.ACTION_TYPE_DICT_FIRST),
 			new MaskSObjectField__c(MaskSObject__c = sobjMask.get(1).Id, APIName__c = 'LastName',
@@ -33,13 +39,20 @@ public class MaskSObjectBatchTest {
 				Value__c = TESTLABEL),
 			new MaskSObjectField__c(MaskSObject__c = sobjMask.get(1).Id, APIName__c = 'HomePhone',
 				Action__c = MaskSObjectConstants.ACTION_ERASE),
+			new MaskSObjectField__c(MaskSObject__c = sobjMask.get(1).Id, APIName__c = 'Title',
+				Action__c = MaskSObjectConstants.ACTION_RANDOMIZE),
 			new MaskSObjectField__c(MaskSObject__c = sobjMask.get(1).Id, APIName__c = 'Email',
+				Action__c = MaskSObjectConstants.ACTION_REPLACE, ActionType__c = MaskSObjectConstants.ACTION_TYPE_DICT_EMAIL),
+			new MaskSObjectField__c(MaskSObject__c = sobjMask.get(2).Id, APIName__c = 'LastName',
+				Action__c = MaskSObjectConstants.ACTION_REPLACE, ActionType__c = MaskSObjectConstants.ACTION_TYPE_DICT_FULL),
+			new MaskSObjectField__c(MaskSObject__c = sobjMask.get(2).Id, APIName__c = 'Email',
 				Action__c = MaskSObjectConstants.ACTION_RANDOMIZE)
 		};
 		insert fieldMask;
 
-		insert new Account(Name = NAME, Phone = PHONE);
-		insert new Contact(FirstName = 'John', LastName = LASTNAME, AssistantName = ASSISTANTNAME, Email = EMAIL, HomePhone = '0606060606');
+		insert new Account(Name = NAME, Phone = PHONE, Description = LUHN);
+		insert new Contact(FirstName = 'John', LastName = LASTNAME, AssistantName = ASSISTANTNAME, Email = EMAIL, HomePhone = PHONE);
+		insert new Lead(LastName = ASSISTANTNAME, Email = EMAIL);
 	}
 
 	@isTest
@@ -50,16 +63,22 @@ public class MaskSObjectBatchTest {
 		Database.executeBatch(new MaskSObjectBatch());
 		Test.stopTest();
 
-		Account acc = [SELECT Id, Name, Phone FROM Account LIMIT 1];
-		System.assertNotEquals(NAME, acc.Name, 'The account name should be masked');
-		System.assertNotEquals(PHONE, acc.Phone, 'The account phone should be masked');
+		Account acc = [SELECT Id, Name, Phone, Description FROM Account LIMIT 1];
+		System.assertNotEquals(NAME, acc.Name, 'The account Name should be masked');
+		System.assertNotEquals(PHONE, acc.Phone, 'The account Phone should be masked');
+		System.assertNotEquals(LUHN, acc.Description, 'The account Description should be masked');
 
-		Contact cont = [SELECT Id, FirstName, LastName, AssistantName, Email, HomePhone FROM Contact LIMIT 1];
-		System.assertNotEquals(LASTNAME, cont.FirstName, 'The contact firstname should be masked');
-		System.assertNotEquals(LASTNAME, cont.LastName, 'The contact lastname should be masked');
+		Contact cont = [SELECT Id, FirstName, LastName, AssistantName, Email, HomePhone, Title FROM Contact LIMIT 1];
+		System.assertNotEquals(LASTNAME, cont.FirstName, 'The contact FirstName should be masked');
+		System.assertNotEquals(LASTNAME, cont.LastName, 'The contact LastName should be masked');
 		System.assertEquals(TESTLABEL, cont.AssistantName, 'The contact AssistantName should be replaced by ' + TESTLABEL);
 		System.assertNotEquals(EMAIL, cont.Email, 'The contact Email should be masked');
+		System.assertNotEquals(TITLE, cont.Title, 'The contact Title should be masked');
 		System.assertEquals(null, cont.HomePhone, 'The contact HomePhone should be erased');
+
+		Lead lea = [SELECT LastName, Email FROM Lead LIMIT 1];
+		System.assertNotEquals(ASSISTANTNAME, lea.LastName, 'The lead LastName should be masked');
+		System.assertNotEquals(EMAIL, lea.Email, 'The lead Email should be masked');
 	}
 
 	@isTest
@@ -71,12 +90,12 @@ public class MaskSObjectBatchTest {
 		Test.stopTest();
 
 		Contact cont = [SELECT Id, LastName, AssistantName, Email FROM Contact LIMIT 1];
-		System.assertNotEquals(LASTNAME, cont.LastName, 'The contact lastname should be masked');
+		System.assertNotEquals(LASTNAME, cont.LastName, 'The contact LastName should be masked');
 		System.assertEquals(TESTLABEL, cont.AssistantName, 'The contact AssistantName should be replaced by ' + TESTLABEL);
 		System.assertNotEquals(EMAIL, cont.Email, 'The contact Email should be masked');
 
 		Account acc = [SELECT Id, Name, Phone FROM Account LIMIT 1];
-		System.assertEquals(NAME, acc.Name, 'The account name should not be masked');
-		System.assertEquals(PHONE, acc.Phone, 'The account phone should not be masked');
+		System.assertEquals(NAME, acc.Name, 'The account Name should not be masked');
+		System.assertEquals(PHONE, acc.Phone, 'The account Phone should not be masked');
 	}
 }

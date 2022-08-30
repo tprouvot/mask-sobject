@@ -84,6 +84,10 @@ public with sharing class MaskSObjectUtils {
 
 				if(MaskSObjectConstants.ACTION_RANDOMIZE.equals(field.Action__c)){
 					val = getRandomString(val.length());
+				} else if(MaskSObjectConstants.ACTION_LUHN.equals(field.Action__c)){
+					//remove last char to calculate it from calculateLuhnCheckDigit
+					val = getRandomIntDigits(val.length()- 1);
+					val += calculateLuhnCheckDigit(val);
 				} else if(MaskSObjectConstants.ACTION_OBFUSCATE.equals(field.Action__c)){
 					val = obfuscate(val);
 				}
@@ -111,6 +115,17 @@ public with sharing class MaskSObjectUtils {
 		return Integer.valueof((Math.random() * max));
 	}
 
+	public static String getRandomIntDigits(Integer numberOfDigits){
+		//generate a random int between 15 and 19 digits
+		String rdm = String.valueOf(Math.random()).substringAfter('.');
+		//handle the case when the generated int is not big enough
+		rdm += rdm.length() < numberOfDigits ? rdm : '';
+		while(rdm.length() > numberOfDigits){
+			rdm = rdm.substring(1);
+		}
+		return rdm;
+	}
+
 	public static MaskSObjectSettings__mdt getOptions(){
 		return options != null ? options : MaskSObjectSettings__mdt.getInstance('Default');
 	}
@@ -118,4 +133,28 @@ public with sharing class MaskSObjectUtils {
 	public static Boolean isSandbox(){
 		return [SELECT IsSandbox FROM Organization LIMIT 1].IsSandbox;
 	}
+
+	private static Integer accumulateLuhn(String[] digits) {
+		// This algorithm goes from the *left*, so we need to know which to double
+		Integer checkSize = 0;
+		Integer accumulator = 0;
+		while(!digits.isEmpty()) {
+			Integer nextDigit = Integer.valueOf(digits.remove(0));
+			// We should double the value when true
+			if((digits.size()&1) == checkSize) {
+				nextDigit <<= 1;
+				// And "add together" the individual digits when 10+
+				if(nextDigit > 9) {
+					nextDigit -= 9;
+				}
+			}
+			accumulator += nextDigit;
+		}
+		return accumulator;
+	}
+
+	public static String calculateLuhnCheckDigit(String source) {
+		return String.valueOf(Math.mod(accumulateLuhn(source.split('')) * 9, 10));
+	}
+
 }

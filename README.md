@@ -51,6 +51,10 @@ MaskSObjectUtils.executeBatch('Contact');
 - Randomize:
 	- Generate a X char String based on `Crypto.generateAesKey(128);` method where X is the number of characters of the input to anonymize.
 		> 'SALESFORCE.COM FRANCE' => 'iih5e2UT0qGZ8fJaNCbTT'
+
+- Random Luhn number
+	- Generate a number considered as valid by Luhn algorithm [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm), the number of characters to generate is calculated from the original input field value.
+
 - Obfuscate:
 	- Replace and lowercase following chars `{'a', 'e', 'i', 'o', '1', '2', '5', '6'};` by `'x'`
 		> 'SALESFORCE.COM FRANCE' => 'sxlxsfxrcx.cxm frxncx'

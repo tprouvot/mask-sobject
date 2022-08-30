@@ -11,6 +11,7 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 
 	@TestVisible
 	private String sobjectName;
+	private Boolean allowExecutionOnProd = Test.isRunningTest() ? true : MaskSObjectUtils.getOptions().AllowExecutionOnProd__c;
 
 	private List<MaskSObjectField__c> fields;
 	private List<String> queryFields;
@@ -42,7 +43,7 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 	 * @return    QueryLocator
 	 */
 	public Database.QueryLocator start(Database.BatchableContext BC){
-		MaskSObjectSettings__mdt options = MaskSObjectUtils.getOptions();
+
 		//update job informations
 		AsyncApexJob job = getJob(BC.getJobId());
 		upsert new MaskSObject__c(APIName__c = this.sobjectName, LastStart__c = System.now(), LastEnd__c = null,
@@ -51,7 +52,7 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 
 		String query = 'SELECT Id, ' + String.join(this.queryFields, ',') + ' FROM ' + String.escapeSingleQuotes(this.sobjectName);
 
-		if(!options.AllowExecutionOnProd__c && !MaskSObjectUtils.isSandbox()){
+		if(!allowExecutionOnProd && !MaskSObjectUtils.isSandbox()){
 			//build a query that returns no rows to prevent batch execution
 			query += ' WHERE Id=null';
 			System.debug(LoggingLevel.WARN, 'MaskSObjectBatch execution on production is forbidden, query updated to return 0 rows');

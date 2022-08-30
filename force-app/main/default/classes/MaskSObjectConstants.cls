@@ -9,6 +9,7 @@ public with sharing class MaskSObjectConstants {
 	public static final String ACTION_REPLACE = 'Replace';
 	public static final String ACTION_OBFUSCATE = 'Obfuscate';
 	public static final String ACTION_RANDOMIZE = 'Randomize';
+	public static final String ACTION_LUHN = 'Random Luhn number';
 
 	//ActionType__c
 	public static final String ACTION_TYPE_HARDCODED = 'Hardcoded';

@@ -10,4 +10,16 @@
         <field>NumberOfDigitToPreserveInPhones__c</field>
         <value xsi:type="xsd:double">2.0</value>
     </values>
+    <values>
+        <field>ObfuscateCharacterReplacement__c</field>
+        <value xsi:type="xsd:string">X</value>
+    </values>
+    <values>
+        <field>ObfuscateDigitReplacement__c</field>
+        <value xsi:type="xsd:string">0</value>
+    </values>
+    <values>
+        <field>ObfuscatedCharacters__c</field>
+        <value xsi:type="xsd:string">a,e,i,o,1,2,5,6</value>
+    </values>
 </CustomMetadata>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ObfuscatedCharacters__c</fullName>
+    <defaultValue>&quot;a, e, i, o, u, 1, 2, 5, 6&quot;</defaultValue>
+    <description>List the characters to obfuscate</description>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <inlineHelpText>List of char separated by coma.</inlineHelpText>
+    <label>Characeters to obfuscate</label>
+    <length>255</length>
+    <required>true</required>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

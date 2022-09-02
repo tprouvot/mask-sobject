@@ -44,9 +44,9 @@ public with sharing class MaskSObjectUtils {
 	 * @return  `String`
 	 */
 	private static String obfuscate(String val){
-		Set<String> chars = new Set<String> {'a', 'e', 'i', 'o', '1', '2', '5', '6'};
+		List<String> chars = options.ObfuscatedCharacters__c.split(',');
 		for(String chr : chars){
-			val = val.toLowerCase().replaceAll(chr, chr.isNumeric() ? '0' : 'x');
+			val = val.toLowerCase().replaceAll(chr, chr.isNumeric() ? options.ObfuscateDigitReplacement__c : options.ObfuscateCharacterReplacement__c);
 		}
 		return val;
 	}

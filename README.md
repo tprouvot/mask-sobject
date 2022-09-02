@@ -56,7 +56,7 @@ MaskSObjectUtils.executeBatch('Contact');
 	- Generate a number considered as valid by Luhn algorithm [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm), the number of characters to generate is calculated from the original input field value.
 
 - Obfuscate:
-	- Replace and lowercase following chars `{'a', 'e', 'i', 'o', '1', '2', '5', '6'};` by `'x'`
+	- Replace and lowercase following chars (customizable in settings) `{'a', 'e', 'i', 'o', '1', '2', '5', '6'};` by `'x'`
 		> 'SALESFORCE.COM FRANCE' => 'sxlxsfxrcx.cxm frxncx'
 - Erase:
 	- > 'SALESFORCE.COM FRANCE' => ''
@@ -88,7 +88,7 @@ You can customize some options by editing MaskSObjectSettings__mdt Default Custo
 - Configure the number of digits to preserve in standard Phone fields.
 
 
-<img alt="Customize options" src="./screenshots/settings.png" height="200" />
+<img alt="Customize options" src="./screenshots/settings.png" />
 
 ## Deploy to Salesforce
 

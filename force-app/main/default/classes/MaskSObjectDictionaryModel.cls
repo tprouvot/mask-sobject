@@ -10,4 +10,5 @@ public with sharing class MaskSObjectDictionaryModel {
 	public String streetAddress;
 	public String city;
 	public String country;
+	public String company;
 }

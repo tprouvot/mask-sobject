@@ -18,4 +18,6 @@ public with sharing class MaskSObjectConstants {
 	public static final String ACTION_TYPE_DICT_LAST = ACTION_TYPE_DICT + '.lastname';
 	public static final String ACTION_TYPE_DICT_FULL = ACTION_TYPE_DICT + '.fullname';
 	public static final String ACTION_TYPE_DICT_EMAIL = ACTION_TYPE_DICT + '.email';
+	public static final String ACTION_TYPE_DICT_COMPANY = ACTION_TYPE_DICT + '.company';
+	public static final String ACTION_TYPE_DICT_STREET = ACTION_TYPE_DICT + '.street';
 }

@@ -45,6 +45,8 @@ public class MaskSObjectBatchTest {
 				Action__c = MaskSObjectConstants.ACTION_REPLACE, ActionType__c = MaskSObjectConstants.ACTION_TYPE_DICT_EMAIL),
 			new MaskSObjectField__c(MaskSObject__c = sobjMask.get(2).Id, APIName__c = 'LastName',
 				Action__c = MaskSObjectConstants.ACTION_REPLACE, ActionType__c = MaskSObjectConstants.ACTION_TYPE_DICT_FULL),
+			new MaskSObjectField__c(MaskSObject__c = sobjMask.get(2).Id, APIName__c = 'Company',
+				Action__c = MaskSObjectConstants.ACTION_REPLACE, ActionType__c = MaskSObjectConstants.ACTION_TYPE_DICT_COMPANY),
 			new MaskSObjectField__c(MaskSObject__c = sobjMask.get(2).Id, APIName__c = 'Email',
 				Action__c = MaskSObjectConstants.ACTION_RANDOMIZE)
 		};
@@ -52,7 +54,7 @@ public class MaskSObjectBatchTest {
 
 		insert new Account(Name = NAME, Phone = PHONE, Description = LUHN);
 		insert new Contact(FirstName = 'John', LastName = LASTNAME, AssistantName = ASSISTANTNAME, Email = EMAIL, HomePhone = PHONE);
-		insert new Lead(LastName = ASSISTANTNAME, Email = EMAIL);
+		insert new Lead(LastName = ASSISTANTNAME, Email = EMAIL, Company = NAME);
 	}
 
 	@isTest
@@ -76,9 +78,10 @@ public class MaskSObjectBatchTest {
 		System.assertNotEquals(TITLE, cont.Title, 'The contact Title should be masked');
 		System.assertEquals(null, cont.HomePhone, 'The contact HomePhone should be erased');
 
-		Lead lea = [SELECT LastName, Email FROM Lead LIMIT 1];
+		Lead lea = [SELECT LastName, Email, Company FROM Lead LIMIT 1];
 		System.assertNotEquals(ASSISTANTNAME, lea.LastName, 'The lead LastName should be masked');
 		System.assertNotEquals(EMAIL, lea.Email, 'The lead Email should be masked');
+		System.assertNotEquals(NAME, lea.Company, 'The lead Company should be masked');
 	}
 
 	@isTest

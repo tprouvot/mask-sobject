@@ -18,6 +18,11 @@
                 <label>Hardcoded</label>
             </value>
             <value>
+                <fullName>Dictionary.company</fullName>
+                <default>false</default>
+                <label>Dictionary Company</label>
+            </value>
+            <value>
                 <fullName>Dictionary.email</fullName>
                 <default>false</default>
                 <label>Dictionary Email</label>
@@ -30,12 +35,17 @@
             <value>
                 <fullName>Dictionary.fullname</fullName>
                 <default>false</default>
-                <label>Dictionary Fullname</label>
+                <label>Dictionary FullName</label>
             </value>
             <value>
                 <fullName>Dictionary.lastname</fullName>
                 <default>false</default>
                 <label>Dictionary Lastname</label>
+            </value>
+            <value>
+                <fullName>Dictionary.street</fullName>
+                <default>false</default>
+                <label>Dictionary Street</label>
             </value>
             <value>
                 <fullName>Regex</fullName>
@@ -47,6 +57,10 @@
         <valueSettings>
             <controllingFieldValue>Replace</controllingFieldValue>
             <valueName>Hardcoded</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Replace</controllingFieldValue>
+            <valueName>Dictionary.company</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Replace</controllingFieldValue>
@@ -63,6 +77,10 @@
         <valueSettings>
             <controllingFieldValue>Replace</controllingFieldValue>
             <valueName>Dictionary.lastname</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Replace</controllingFieldValue>
+            <valueName>Dictionary.street</valueName>
         </valueSettings>
     </valueSet>
 </CustomField>

@@ -118,7 +118,7 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 
 		//batch size for the next execution is in the next list index
 		if(settings.size() > 1){
-			this.batchSize = settings.get(1)?.BatchSize__c != null ? Integer.valueOf(settings.get(1).BatchSize__c) : 200;
+			this.batchSize = settings.get(1)?.BatchSize__c != null ? Integer.valueOf(settings.get(1).BatchSize__c) : 2000;
 		}
 
 		this.sobjectName = setting.APIName__c;

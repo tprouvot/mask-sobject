@@ -1,6 +1,7 @@
 public with sharing class MaskSObjectUtils {
 
 	public static MaskSObjectSettings__mdt options;
+	public final static Integer BATCH_SIZE = 2000;
 
 	/**
 	 * @description Allow users to run the batch for all or a particular object
@@ -10,7 +11,7 @@ public with sharing class MaskSObjectUtils {
 		List<MaskSObject__c> settings = MaskSObjectUtils.getMaskSObjectList(0, sobjectName);
 		if(!settings.isEmpty()){
 			MaskSObject__c setting = settings.get(0);
-			Integer batchSize = setting.BatchSize__c != null ? Integer.valueOf(setting.BatchSize__c) : 200;
+			Integer batchSize = setting.BatchSize__c != null ? Integer.valueOf(setting.BatchSize__c) : BATCH_SIZE;
 			Database.executeBatch(new MaskSObjectBatch(sobjectName), batchSize);
 		}
 	}

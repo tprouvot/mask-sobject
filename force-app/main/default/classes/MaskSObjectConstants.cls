@@ -20,4 +20,9 @@ public with sharing class MaskSObjectConstants {
 	public static final String ACTION_TYPE_DICT_EMAIL = ACTION_TYPE_DICT + '.email';
 	public static final String ACTION_TYPE_DICT_COMPANY = ACTION_TYPE_DICT + '.company';
 	public static final String ACTION_TYPE_DICT_STREET = ACTION_TYPE_DICT + '.street';
+
+	//Mode__c
+	public static final String MODE_ONESHOT = 'One-shot';
+	public static final String MODE_SCHEDULED = 'Scheduled';
+	public static final String MODE_BOTH = 'Both';
 }

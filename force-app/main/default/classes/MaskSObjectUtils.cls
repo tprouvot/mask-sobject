@@ -24,7 +24,7 @@ public with sharing class MaskSObjectUtils {
 	 */
 	public static List<MaskSObject__c> getMaskSObjectList(Integer sequence, String sobjectName){
 		return [SELECT APIName__c, Sequence__c, WhereClause__c, BatchSize__c
-			,(SELECT APIName__c, Action__c, ActionType__c, Value__c FROM MaskSObjectFields__r) FROM MaskSObject__c
+			,(SELECT APIName__c, Action__c, ActionType__c, Value__c, Mode__c FROM MaskSObjectFields__r) FROM MaskSObject__c
 			WHERE Sequence__c >:sequence AND APIName__c LIKE :sobjectName ORDER BY Sequence__c];
 	}
 
@@ -161,5 +161,4 @@ public with sharing class MaskSObjectUtils {
 	public static String calculateLuhnCheckDigit(String source) {
 		return String.valueOf(Math.mod(accumulateLuhn(source.split('')) * 9, 10));
 	}
-
 }

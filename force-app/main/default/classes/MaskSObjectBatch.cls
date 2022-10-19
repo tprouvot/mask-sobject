@@ -17,6 +17,7 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 	private List<String> queryFields;
 	private String whereClause;
 	private Map<String, Schema.DisplayType> fieldType;
+	public String mode = MaskSObjectConstants.MODE_ONESHOT; //instanciate mode on 'One-Shot'
 
 	/**
 	 * @description Instanciate constructor with parameters, is called in the finish method
@@ -33,6 +34,21 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 		setParams(null, '%');
 	}
 
+	/**
+	 * @description Run the batch in scheduledMode
+	 * @param isScheduledMode
+	 */
+	public MaskSObjectBatch(Boolean isScheduledMode){
+		if(isScheduledMode){
+			this.mode = MaskSObjectConstants.MODE_SCHEDULED;
+		}
+		setParams(null, '%');
+	}
+
+	/**
+	 * @description Run the batch on a particular SObject
+	 * @param sObjectName
+	 */
 	public MaskSObjectBatch(String sObjectName){
 		setParams(sequence, sObjectName);
 	}
@@ -68,7 +84,10 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 			Integer random = dictionary != null ? MaskSObjectUtils.getRandomInt(dictionary.size()) : null;
 			MaskSObjectDictionaryModel data = dictionary != null ? dictionary.get(random) : null;
 			for(MaskSObjectField__c field : this.fields){
-				MaskSObjectUtils.maskField(fieldType, field, sobj, data);
+				//check if the batch runs in the field's mode
+				if(mode.equals(field.Mode__c) || mode.equals(MaskSObjectConstants.MODE_BOTH)){
+					MaskSObjectUtils.maskField(fieldType, field, sobj, data);
+				}
 			}
 		}
 
@@ -96,6 +115,7 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 	/**
 	 * @description Instanciate the parameters of the batch :the sobjectName to parse and his sequence
 	 * @param  sequence Object order of execution
+	 * @param  sobjectName SObject name to run the batch on, can be '%' to run on all objects
 	 */
 	private void setParams(Integer sequence, String sobjectName){
 		//if param is null it means the method was called from the scheduled job
@@ -127,19 +147,8 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 		//store the fields to mask for the query
 		this.fields = setting.MaskSObjectFields__r;
 		queryFields = new List<String>();
-		Boolean requireDictionary = false;
-		for(MaskSObjectField__c field : setting.MaskSObjectFields__r){
-			this.queryFields.add(field.APIName__c);
-			if(!requireDictionary && field.ActionType__c != null && field.ActionType__c.startsWith(MaskSObjectConstants.ACTION_TYPE_DICT)){
-				requireDictionary = true;
-			}
-		}
 
-		if(this.dictionary == null && requireDictionary){
-			StaticResource sr = [SELECT Body FROM StaticResource WHERE Name = 'MaskSObjectDictionary' LIMIT 1];
-			this.dictionary = (List<MaskSObjectDictionaryModel>)JSON.deserializeStrict(sr.Body.toString(),
-			List<MaskSObjectDictionaryModel>.class);
-		}
+		setDictionaryIfRequied(setting);
 
 		//store describe field result to set it only on new SObject iteration
 		setFieldsTypes();
@@ -158,5 +167,25 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 
 	private AsyncApexJob getJob(Id jobId){
 		return [SELECT JobItemsProcessed, TotalJobItems, NumberOfErrors FROM AsyncApexJob WHERE Id=:jobId];
+	}
+
+	/**
+	 * @description Set the dictionary class variable if one of the MaskSObjectField__c requires dictionnary
+	 * @param setting MaskSObject__c
+	 */
+	private void setDictionaryIfRequied(MaskSObject__c setting){
+		Boolean requireDictionary = false;
+		for(MaskSObjectField__c field : setting.MaskSObjectFields__r){
+			this.queryFields.add(field.APIName__c);
+			if(!requireDictionary && field.ActionType__c != null && field.ActionType__c.startsWith(MaskSObjectConstants.ACTION_TYPE_DICT)){
+				requireDictionary = true;
+			}
+		}
+
+		if(this.dictionary == null && requireDictionary){
+			StaticResource sr = [SELECT Body FROM StaticResource WHERE Name = 'MaskSObjectDictionary' LIMIT 1];
+			this.dictionary = (List<MaskSObjectDictionaryModel>)JSON.deserializeStrict(sr.Body.toString(),
+			List<MaskSObjectDictionaryModel>.class);
+		}
 	}
 }

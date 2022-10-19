@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>APIName__c</fullName>
     <description>API of the field to mask</description>
-    <externalId>false</externalId>
+    <externalId>true</externalId>
     <label>API Name</label>
     <length>150</length>
     <required>true</required>

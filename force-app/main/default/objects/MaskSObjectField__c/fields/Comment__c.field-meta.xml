@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Comment__c</fullName>
+    <description>Add more context about the business need of this field masking.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Add more context about the business need of this field masking.</inlineHelpText>
+    <label>Comment</label>
+    <length>32768</length>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

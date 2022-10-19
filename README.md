@@ -15,7 +15,7 @@ The configuration is based on two objects:
 - MaskSObjectField___c : field to mask and the option of masking (erase, randomize ...)
 
 
-[![SObjedt config](./screenshots/2022-08-10_09-42-09.png)](./screenshots/2022-08-10_09-42-09.png)
+[![SObject config](./screenshots/2022-08-10_09-42-09.png)](./screenshots/2022-08-10_09-42-09.png)
 
 To assign required pset run following command:
 ```sh
@@ -30,7 +30,7 @@ sfdx force:apex:execute -f scripts/importDemo.apex
 ## How To Run Data Masking ?
 
 - With execute anonymous and the following code
-	- To run anonymisation on all objects
+	- To run the masking on all objects
 ```java
 MaskSObjectUtils.executeBatch('%');
 ```
@@ -62,7 +62,7 @@ MaskSObjectUtils.executeBatch('Contact');
 	- > 'SALESFORCE.COM FRANCE' => ''
 - Replace:
 	- Actions Types:
-		- Hardcoded: You must insert an hardocoded value in Value__c field to replace the current field value with hardcoded one.
+		- Hardcoded: You must insert an hardcoded value in Value__c field to replace the current field value with hardcoded one.
 		- Dictionary:
 			- You can choose different dictionary fields to replace the current value **Firstname, Lastname, Fullname, Email, Company Name, Street**.
 			- A random line from MaskSObjectDictionary.json file will be selected to fill the field.

@@ -85,7 +85,7 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 			MaskSObjectDictionaryModel data = dictionary != null ? dictionary.get(random) : null;
 			for(MaskSObjectField__c field : this.fields){
 				//check if the batch runs in the field's mode
-				if(mode.equals(field.Mode__c) || mode.equals(MaskSObjectConstants.MODE_BOTH)){
+				if(this.mode.equals(field.Mode__c) || MaskSObjectConstants.MODE_BOTH.equals(field.Mode__c)){
 					MaskSObjectUtils.maskField(fieldType, field, sobj, data);
 				}
 			}

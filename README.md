@@ -94,6 +94,18 @@ You can customize some options by editing MaskSObjectSettings__mdt Default Custo
 
 <img alt="Customize options" src="./screenshots/settings.png" />
 
+
+## Manage Errors
+Mask SObject Framework may throw some errors during the run, due to validation rules or implementation specificity in your org.
+To be able to track and manage those errors, we implemented the MaskSObjectError__c object.
+
+<img alt="Errors" src="./screenshots/error.png" />
+
+If you want to, you can disable the error's record creation in the custom metadata settings.
+
+### Errors Purge
+You can manage logs purge with the framework [SObject Purge Framework](https://github.com/tprouvot/purge-sobject)
+
 ## Deploy to Salesforce
 
 Checkout the repo and deploy it with sfdx:

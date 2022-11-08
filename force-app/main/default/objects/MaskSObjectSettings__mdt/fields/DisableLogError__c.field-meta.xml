@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DisableLogError__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Can enable of disable MaskSObjectError records creation</description>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <inlineHelpText>If checked, no MaskSObjectError__c record will be created.</inlineHelpText>
+    <label>Disable log error</label>
+    <type>Checkbox</type>
+</CustomField>

@@ -167,4 +167,41 @@ public with sharing class MaskSObjectUtils {
 	public static String calculateLuhnCheckDigit(String source) {
 		return String.valueOf(Math.mod(accumulateLuhn(source.split('')) * 9, 10));
 	}
+
+	public static void saveErrors(List<Database.SaveResult> srList, Id jobId, String sobj){
+		if(!options.DisableLogError__c){
+			List<MaskSObjectError__c> errs = new List<MaskSObjectError__c>();
+			for(Database.SaveResult sr : srList){
+				if(!sr.isSuccess()){
+					String error = getError(sr.getErrors());
+					errs.add(createError(sr.getId(), error, jobId, sobj));
+				}
+			}
+			insert errs;
+		}
+	}
+
+	public static void saveError(Exception e, Id jobId, String sobj){
+		if(!options.DisableLogError__c){
+			String error = e.getMessage() + ' ' + e.getStackTraceString();
+			insert createError(null, error, jobId, sobj);
+		}
+	}
+
+	/**
+	 * @description Returns formated Database.Error to String
+	 * @param errors
+	 * @return Database.Error information (statusCode, fields and message)
+	 */
+	public static String getError(List<Database.Error> errors){
+		String error = '';
+		for (Database.Error er: errors) {
+			error += '[' + er.getStatusCode() + '] ' + er.getFields() + ' ' + er.getMessage();
+		}
+		return error;
+	}
+
+	public static MaskSObjectError__c createError(Id recId, String error, Id jobId, String sobj){
+		return new MaskSObjectError__c(RecordId__c = recId, Error__c = error, JobId__c = jobId, SObject__c = sobj);
+	}
 }

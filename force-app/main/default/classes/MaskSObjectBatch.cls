@@ -59,45 +59,58 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 	 * @return    QueryLocator
 	 */
 	public Database.QueryLocator start(Database.BatchableContext BC){
+		String query;
 
 		//update job informations
 		AsyncApexJob job = getJob(BC.getJobId());
-		upsert new MaskSObject__c(APIName__c = this.sobjectName, LastStart__c = System.now(), LastEnd__c = null,
+		try {
+			upsert new MaskSObject__c(APIName__c = this.sobjectName, LastStart__c = System.now(), LastEnd__c = null,
 			LastJobId__c = job.Id, JobItemsProcessed__c = job.JobItemsProcessed, TotalJobItems__c = job.TotalJobItems,
 			NumberOfErrors__c = job.NumberOfErrors) APIName__c;
 
-		String query = 'SELECT Id, ' + String.join(this.queryFields, ',') + ' FROM ' + String.escapeSingleQuotes(this.sobjectName);
+			query = 'SELECT Id, ' + String.join(this.queryFields, ',') + ' FROM ' + String.escapeSingleQuotes(this.sobjectName);
 
-		if(!allowExecutionOnProd && !MaskSObjectUtils.isSandbox()){
-			//build a query that returns no rows to prevent batch execution
-			query += ' WHERE Id=null';
-			System.debug(LoggingLevel.WARN, 'MaskSObjectBatch execution on production is forbidden, query updated to return 0 rows');
-		} else if(String.isNotBlank(whereClause)){
-			query += ' WHERE ' + whereClause;
+			if(!MaskSObjectUtils.isSandbox() && !allowExecutionOnProd){
+				//build a query that returns no rows to prevent batch execution
+				query += ' WHERE Id=null';
+				System.debug(LoggingLevel.WARN, 'MaskSObjectBatch execution on production is forbidden, query updated to return 0 rows');
+			} else if(String.isNotBlank(whereClause)){
+				query += ' WHERE ' + whereClause;
+			}
+			return Database.getQueryLocator(query);
+		} catch (Exception e) {
+			MaskSObjectUtils.saveError(e, job.Id, this.sobjectName);
+			return Database.getQueryLocator(query);
 		}
-		return Database.getQueryLocator(query);
 	}
 
 	public void execute(Database.BatchableContext BC, List<SObject> scope){
+		AsyncApexJob job;
+		try {
+			job = getJob(BC.getJobId());
 
-		for(SObject sobj : scope){
-			Integer random = dictionary != null ? MaskSObjectUtils.getRandomInt(dictionary.size()) : null;
-			MaskSObjectDictionaryModel data = dictionary != null ? dictionary.get(random) : null;
-			for(MaskSObjectField__c field : this.fields){
-				//check if the batch runs in the field's mode
-				if(this.mode.equals(field.Mode__c) || MaskSObjectConstants.MODE_BOTH.equals(field.Mode__c)){
-					MaskSObjectUtils.maskField(fieldType, field, sobj, data);
+			for(SObject sobj : scope){
+				Integer random = dictionary != null ? MaskSObjectUtils.getRandomInt(dictionary.size()) : null;
+				MaskSObjectDictionaryModel data = dictionary != null ? dictionary.get(random) : null;
+				for(MaskSObjectField__c field : this.fields){
+					//check if the batch runs in the field's mode
+					if(this.mode.equals(field.Mode__c) || MaskSObjectConstants.MODE_BOTH.equals(field.Mode__c)){
+						MaskSObjectUtils.maskField(fieldType, field, sobj, data);
+					}
 				}
 			}
-		}
 
-		SObjectType sObjType = ((SObject) Type.forName(this.sobjectName).newInstance()).getSObjectType();
-		if (sObjType.getDescribe().isUpdateable()) {
-			Database.update(scope, false);
+			SObjectType sObjType = ((SObject) Type.forName(this.sobjectName).newInstance()).getSObjectType();
+			if (sObjType.getDescribe().isUpdateable()) {
+				List<Database.SaveResult> srList = Database.update(scope, false);
+				MaskSObjectUtils.saveErrors(srList, job.Id, this.sobjectName);
+			}
+
+			upsert new MaskSObject__c(APIName__c = this.sobjectName, TotalJobItems__c = job.TotalJobItems,
+				JobItemsProcessed__c = job.JobItemsProcessed + 1, NumberOfErrors__c = job.NumberOfErrors) APIName__c;
+		} catch (Exception e) {
+			MaskSObjectUtils.saveError(e, job.Id, this.sobjectName);
 		}
-		AsyncApexJob job = getJob(BC.getJobId());
-		upsert new MaskSObject__c(APIName__c = this.sobjectName, TotalJobItems__c = job.TotalJobItems,
-			JobItemsProcessed__c = job.JobItemsProcessed + 1, NumberOfErrors__c = job.NumberOfErrors) APIName__c;
 	}
 
 	/**

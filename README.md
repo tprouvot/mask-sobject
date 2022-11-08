@@ -47,16 +47,9 @@ MaskSObjectUtils.executeBatch('Contact');
 You can schedule MaskSObjectBatchSchedulable class to execute periodically.
 Since this usage is quite different from the one-shot anonymisation and adress project run business needs, the maskfield actions will be executed only if the Mode__c is set to 'Scheduled' or 'Both'
 
+### Manually
 
-### Post Copy
-> **Warning**
->- ~~When creating / refreshing a sandbox:~~ currently there's a [#bug](./issues/20) on post copy actions
-
-<img alt="Configure post copy class" src="./screenshots/sandbox-postcopy.png" />
-
->**Warning**: if you choose this option, you need a Partial Copy Sandbox or a Full Copy Sandbox and data configuration on Production.
-
-- Manually using [Launch Batch LWC](https://github.com/tprouvot/launch-batch-lwc)
+Using [Launch Batch LWC](https://github.com/tprouvot/launch-batch-lwc)
 
 ## Actions
 - Randomize:

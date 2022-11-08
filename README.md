@@ -45,7 +45,7 @@ MaskSObjectUtils.executeBatch('Contact');
 ### Scheduled mode
 
 You can schedule MaskSObjectBatchSchedulable class to execute periodically.
-Since this usage is quite different from the one-shot anonymisation and adress project run business needs, the maskfield actions will be executed only if the Mode__c is set to 'Scheduled' or 'Both'
+Since this usage is quite different from the one-shot anonymization and address project run business needs, the maskfield actions will be executed only if the Mode__c is set to 'Scheduled' or 'Both'
 
 ### Manually
 

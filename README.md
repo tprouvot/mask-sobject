@@ -15,7 +15,7 @@ The configuration is based on two objects:
 - MaskSObjectField___c : field to mask and the option of masking (erase, randomize ...)
 
 
-[![SObject config](./screenshots/2022-08-10_09-42-09.png)](./screenshots/2022-08-10_09-42-09.png)
+[![SObject config](./screenshots/MaskSObject.png)](./screenshots/MaskSObject.png)
 
 To assign required pset run following command:
 ```sh

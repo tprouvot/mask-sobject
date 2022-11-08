@@ -144,16 +144,22 @@ public with sharing class MaskSObjectUtils {
 		Integer checkSize = 0;
 		Integer accumulator = 0;
 		while(!digits.isEmpty()) {
-			Integer nextDigit = Integer.valueOf(digits.remove(0));
-			// We should double the value when true
-			if((digits.size()&1) == checkSize) {
-				nextDigit <<= 1;
-				// And "add together" the individual digits when 10+
-				if(nextDigit > 9) {
-					nextDigit -= 9;
+			Integer nextDigit;
+			try{
+				nextDigit = Integer.valueOf(digits.remove(0));
+				// We should double the value when true
+				if((digits.size()&1) == checkSize) {
+					nextDigit <<= 1;
+					// And "add together" the individual digits when 10+
+					if(nextDigit > 9) {
+						nextDigit -= 9;
+					}
 				}
+				accumulator += nextDigit;
+			} catch(Exception e){
+				System.debug(LoggingLevel.ERROR, e.getMessage());
+				break;
 			}
-			accumulator += nextDigit;
 		}
 		return accumulator;
 	}

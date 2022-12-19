@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>UseBulkAPI__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>Enable this checkbox to use the Bulk API to perform the updates.</description>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <inlineHelpText>Enable this checkbox to use the Bulk API to perform the updates.</inlineHelpText>
+    <label>Use Bulk API</label>
+    <type>Checkbox</type>
+</CustomField>

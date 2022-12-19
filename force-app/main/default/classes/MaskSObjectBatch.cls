@@ -1,7 +1,7 @@
 /**
  * @description This class is used to mask the database by performing records updates
  */
-public with sharing class MaskSObjectBatch implements Database.Batchable<sObject>{
+public with sharing class MaskSObjectBatch implements Database.Batchable<SObject>, Database.AllowsCallouts{
 
 	private List<MaskSObjectDictionaryModel> dictionary;
 
@@ -80,12 +80,14 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 			return Database.getQueryLocator(query);
 		} catch (Exception e) {
 			MaskSObjectUtils.saveError(e, job.Id, this.sobjectName);
-			return Database.getQueryLocator(query);
+			//return a empty queryLocator
+			return Database.getQueryLocator('SELECT Id FROM ' + this.sobjectName + ' WHERE Id=null');
 		}
 	}
 
 	public void execute(Database.BatchableContext BC, List<SObject> scope){
 		AsyncApexJob job;
+		Id bulkJobId;
 		try {
 			job = getJob(BC.getJobId());
 
@@ -102,11 +104,16 @@ public with sharing class MaskSObjectBatch implements Database.Batchable<sObject
 
 			SObjectType sObjType = ((SObject) Type.forName(this.sobjectName).newInstance()).getSObjectType();
 			if (sObjType.getDescribe().isUpdateable()) {
-				List<Database.SaveResult> srList = Database.update(scope, false);
-				MaskSObjectUtils.saveErrors(srList, job.Id, this.sobjectName);
+				if(MaskSObjectUtils.getOptions().UseBulkAPI__c){
+					this.queryFields.add('Id');
+					bulkJobId = BulkApiDml.importBulkdata(this.queryFields, scope, 'update');
+				} else{
+					List<Database.SaveResult> srList = Database.update(scope, false);
+					MaskSObjectUtils.saveErrors(srList, job.Id, this.sobjectName);
+				}
 			}
 
-			upsert new MaskSObject__c(APIName__c = this.sobjectName, TotalJobItems__c = job.TotalJobItems,
+			upsert new MaskSObject__c(APIName__c = this.sobjectName, TotalJobItems__c = job.TotalJobItems, LastBulkJobId__c = bulkJobId,
 				JobItemsProcessed__c = job.JobItemsProcessed + 1, NumberOfErrors__c = job.NumberOfErrors) APIName__c;
 		} catch (Exception e) {
 			MaskSObjectUtils.saveError(e, job.Id, this.sobjectName);

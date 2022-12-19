@@ -4,6 +4,10 @@
     <protected>false</protected>
     <values>
         <field>AllowExecutionOnProd__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>DisableLogError__c</field>
         <value xsi:type="xsd:boolean">false</value>
     </values>
     <values>
@@ -21,5 +25,9 @@
     <values>
         <field>ObfuscatedCharacters__c</field>
         <value xsi:type="xsd:string">a,e,i,o,1,2,5,6</value>
+    </values>
+    <values>
+        <field>UseBulkAPI__c</field>
+        <value xsi:type="xsd:boolean">true</value>
     </values>
 </CustomMetadata>

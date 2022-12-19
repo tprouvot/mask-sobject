@@ -90,10 +90,19 @@ Website used to generate the data https://www.mockaroo.com/
 You can customize some options by editing MaskSObjectSettings__mdt Default Custom Metadata
 - Allow execution on prod : enable this option to be able to run the batch on PROD (otherwise soql query returns no rows)
 - Configure the number of digits to preserve in standard Phone fields.
+- Use Bulk API to perform faster updates
 
 
 <img alt="Customize options" src="./screenshots/settings.png" />
 
+## Bulk API
+Make sure to check for the [Limits](https://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/bulk_common_limits.htm) and [compatible objects](https://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/how_requests_are_processed.htm).
+
+We recommend to start building your mask configuration with the bulk api option disable, it will be easier to check for errors at the beginning.
+Once your configuration is OK, you can enable Bulk API to perform faster updates.
+
+- Check for errors : sue the REST request to check for errors for a particular jobId "/services/data/v56.0/jobs/ingest/jobID/failedResults/"
+> **Warning** At the moment, the number of errors displayed in the MaskSObject record is not updated when using Bulk API
 
 ## Manage Errors
 Mask SObject Framework may throw some errors during the run, due to validation rules or implementation specificity in your org.
@@ -101,7 +110,7 @@ To be able to track and manage those errors, we implemented the MaskSObjectError
 
 <img alt="Errors" src="./screenshots/error.png" />
 
-If you want to, you can disable the error's record creation in the custom metadata settings.
+> **Note** If you want to, you can disable the error's record creation in the custom metadata settings.
 
 ### Errors Purge
 You can manage logs purge with the framework [SObject Purge Framework](https://github.com/tprouvot/purge-sobject)

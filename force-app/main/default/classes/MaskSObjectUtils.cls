@@ -182,8 +182,11 @@ public with sharing class MaskSObjectUtils {
 	}
 
 	public static void saveError(Exception e, Id jobId, String sobj){
-		if(!options.DisableLogError__c){
-			String error = e.getMessage() + ' ' + e.getStackTraceString();
+		saveError(e.getMessage() + ' ' + e.getStackTraceString(), jobId, sobj);
+	}
+
+	public static void saveError(String error, Id jobId, String sobj){
+		if(!getOptions().DisableLogError__c){
 			insert createError(null, error, jobId, sobj);
 		}
 	}

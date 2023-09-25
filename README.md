@@ -14,8 +14,8 @@ The configuration is based on two objects:
 - MaskSObject__c : object to mask with options such as the order sequence and the where clause
 - MaskSObjectField___c : field to mask and the option of masking (erase, randomize ...)
 
+![image](https://github.com/tprouvot/mask-sobject/assets/35368290/274eadc3-4060-4c8d-bceb-334f9a0f059c)
 
-[![SObject config](./screenshots/MaskSObject.png)](./screenshots/MaskSObject.png)
 
 To assign required pset run following command:
 ```sh

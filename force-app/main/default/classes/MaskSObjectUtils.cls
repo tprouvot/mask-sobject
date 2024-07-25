@@ -53,10 +53,10 @@ public with sharing class MaskSObjectUtils {
 	}
 
 	public static void maskField(Map<String, Schema.DisplayType> fieldType, MaskSObjectField__c field, SObject sobj, MaskSObjectDictionaryModel data){
-		String val = (String)sobj.get(field.APIName__c);
+		String val = String.valueOf(sobj.get(field.APIName__c));
 		options = getOptions();
 		if(val != null){
-			String retVal;
+			Object retVal;
 
 			if(MaskSObjectConstants.ACTION_ERASE.equals(field.Action__c)){
 				retVal = null;

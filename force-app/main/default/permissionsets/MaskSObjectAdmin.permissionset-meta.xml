@@ -63,6 +63,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>MaskSObject__c.LastBulkJobId__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>MaskSObject__c.LastJobId__c</field>
         <readable>true</readable>
     </fieldPermissions>
